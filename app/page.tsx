@@ -11,14 +11,16 @@ import {
   doc,
 } from "firebase/firestore";
 
-/* ✅ TIPO PRO */
+/* ✅ TIPO */
 type Orden = {
   id: string;
   numero?: string;
   nombre: string;
   telefono: string;
+  dni?: string;
   modelo: string;
   problema: string;
+  codigo?: string;
   notas?: string;
   presupuesto?: string;
   estado: string;
@@ -33,17 +35,20 @@ export default function Home() {
   const [form, setForm] = useState({
     nombre: "",
     telefono: "",
+    dni: "",
     modelo: "",
     problema: "",
+    codigo: "",
     notas: "",
     presupuesto: "",
     estado: "RECIBIDO",
   });
 
+  // 🔥 Número único
   const generarNumero = () => {
     const año = new Date().getFullYear();
-    const numero = ordenes.length + 1;
-    return `${año}-${String(numero).padStart(4, "0")}`;
+    const timestamp = Date.now().toString().slice(-6);
+    return `${año}-${timestamp}`;
   };
 
   const cargarOrdenes = async () => {
@@ -60,19 +65,24 @@ export default function Home() {
   }, []);
 
   const crearOrden = async () => {
-    if (!form.nombre) return;
+    if (!form.nombre || !form.telefono) {
+      alert("Faltan datos");
+      return;
+    }
 
     await addDoc(collection(db, "ordenes"), {
       ...form,
       numero: generarNumero(),
-      fecha: new Date(),
+      fecha: new Date().toISOString(),
     });
 
     setForm({
       nombre: "",
       telefono: "",
+      dni: "",
       modelo: "",
       problema: "",
+      codigo: "",
       notas: "",
       presupuesto: "",
       estado: "RECIBIDO",
@@ -94,81 +104,61 @@ export default function Home() {
 
   const enviarWhatsApp = (telefono: string, nombre: string, estado: string) => {
     const msg = `Hola ${nombre}, tu equipo está en estado: ${estado}`;
-    window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(msg)}`);
+    if (typeof window !== "undefined") {
+      window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(msg)}`);
+    }
   };
 
   const guardarEdicion = async () => {
     if (!ordenSeleccionada) return;
 
-    await updateDoc(
-      doc(db, "ordenes", ordenSeleccionada.id),
-      ordenSeleccionada
-    );
+    const { id, ...datos } = ordenSeleccionada;
+    await updateDoc(doc(db, "ordenes", id), datos as any);
 
     setOrdenSeleccionada(null);
     cargarOrdenes();
   };
 
+  // 🧾 IMPRIMIR
   const imprimirOrden = (orden: Orden) => {
-    const ventana = window.open("", "_blank");
+    if (typeof window === "undefined") return;
 
-    const fecha = new Date(
-      orden.fecha?.seconds ? orden.fecha.seconds * 1000 : orden.fecha
-    );
+    const ventana = window.open("", "_blank");
+    const fecha = new Date(orden.fecha);
 
     ventana?.document.write(`
       <html>
-        <head>
-          <title>Orden ${orden.numero}</title>
-          <style>
-            body { font-family: Arial; padding: 20px; max-width: 400px; margin: auto; }
-            h1 { text-align: center; font-size: 20px; }
-            .linea { border-bottom: 1px dashed #000; margin: 10px 0; }
-            .campo { margin: 5px 0; }
-            .titulo { font-weight: bold; }
-            .firma { margin-top: 40px; }
-          </style>
-        </head>
-        <body>
+        <body style="font-family:Arial;padding:20px;max-width:400px;margin:auto">
+          <h2 style="text-align:center">🛠️ Ink-Mobile</h2>
 
-          <h1>🛠️ Ink-Mobile</h1>
+          <p><b>Orden:</b> ${orden.numero}</p>
+          <p><b>Fecha:</b> ${fecha.toLocaleString()}</p>
 
-<div style="text-align:center; font-size:12px;">
-  CIF: E56261365<br/>
-  TEL: 600 639 228<br/>
-  C/ CRUZ VERDE Nº22
-</div>
+          <hr/>
 
-          <div class="linea"></div>
+          <p><b>Cliente:</b> ${orden.nombre}</p>
+          <p><b>Teléfono:</b> ${orden.telefono}</p>
+          <p><b>DNI:</b> ${orden.dni || "-"}</p>
 
-          <div class="campo"><b>Orden:</b> ${orden.numero}</div>
-          <div class="campo"><b>Fecha:</b> ${fecha.toLocaleString()}</div>
+          <hr/>
 
-          <div class="linea"></div>
+          <p><b>Modelo:</b> ${orden.modelo}</p>
+          <p><b>Problema:</b> ${orden.problema}</p>
+          <p><b>Código:</b> ${orden.codigo || "-"}</p>
 
-          <div class="campo"><b>Cliente:</b> ${orden.nombre}</div>
-          <div class="campo"><b>Teléfono:</b> ${orden.telefono}</div>
+          <hr/>
 
-          <div class="linea"></div>
+          <p><b>Notas:</b> ${orden.notas || "-"}</p>
+          <p><b>Presupuesto:</b> ${orden.presupuesto || "-"} €</p>
 
-          <div class="campo"><b>Modelo:</b> ${orden.modelo}</div>
-          <div class="campo"><b>Problema:</b> ${orden.problema}</div>
+          <hr/>
 
-          <div class="linea"></div>
+          <p><b>Estado:</b> ${orden.estado}</p>
 
-          <div class="campo"><b>Notas:</b> ${orden.notas || "-"}</div>
-          <div class="campo"><b>Presupuesto:</b> ${orden.presupuesto || "-"} €</div>
-
-          <div class="linea"></div>
-
-          <div class="campo"><b>Estado:</b> ${orden.estado}</div>
-
-          <div class="firma">
-            Firma cliente: _______________________
-          </div>
+          <br/><br/>
+          Firma: ___________________
 
           <script>window.print()</script>
-
         </body>
       </html>
     `);
@@ -182,122 +172,63 @@ export default function Home() {
       o.modelo?.toLowerCase().includes(busqueda.toLowerCase())
   );
 
-  /* 👁️ DETALLE */
+  // 👁️ DETALLE
   if (ordenSeleccionada) {
     const o = ordenSeleccionada;
 
     return (
       <div className="p-4 max-w-3xl mx-auto">
-        <button
-          onClick={() => setOrdenSeleccionada(null)}
-          className="mb-4 bg-gray-300 px-3 py-1 rounded"
-        >
-          ⬅️ Volver
-        </button>
+        <button onClick={() => setOrdenSeleccionada(null)}>⬅️ Volver</button>
 
-        <div className="bg-white shadow p-6 rounded space-y-3">
-          <h2 className="text-2xl font-bold">Orden {o.numero}</h2>
+        <input value={o.nombre} onChange={(e) => setOrdenSeleccionada({ ...o, nombre: e.target.value })} />
+        <input value={o.telefono} onChange={(e) => setOrdenSeleccionada({ ...o, telefono: e.target.value })} />
+        <input value={o.dni || ""} onChange={(e) => setOrdenSeleccionada({ ...o, dni: e.target.value })} />
+        <input value={o.modelo} onChange={(e) => setOrdenSeleccionada({ ...o, modelo: e.target.value })} />
+        <input value={o.problema} onChange={(e) => setOrdenSeleccionada({ ...o, problema: e.target.value })} />
+        <input value={o.codigo || ""} onChange={(e) => setOrdenSeleccionada({ ...o, codigo: e.target.value })} />
 
-          <input className="border p-2 w-full" value={o.nombre} onChange={(e) => setOrdenSeleccionada({ ...o, nombre: e.target.value })} />
-          <input className="border p-2 w-full" value={o.telefono} onChange={(e) => setOrdenSeleccionada({ ...o, telefono: e.target.value })} />
-          <input className="border p-2 w-full" value={o.modelo} onChange={(e) => setOrdenSeleccionada({ ...o, modelo: e.target.value })} />
-          <input className="border p-2 w-full" value={o.problema} onChange={(e) => setOrdenSeleccionada({ ...o, problema: e.target.value })} />
-          <textarea className="border p-2 w-full" value={o.notas} onChange={(e) => setOrdenSeleccionada({ ...o, notas: e.target.value })} />
-          <input className="border p-2 w-full" value={o.presupuesto} onChange={(e) => setOrdenSeleccionada({ ...o, presupuesto: e.target.value })} />
-
-          <select
-            className="border p-2 w-full"
-            value={o.estado}
-            onChange={(e) =>
-              setOrdenSeleccionada({ ...o, estado: e.target.value })
-            }
-          >
-            <option value="RECIBIDO">Recibido</option>
-            <option value="PENDIENTE">Pendiente</option>
-            <option value="ESPERA">Espera</option>
-            <option value="FINALIZADO">Finalizado</option>
-          </select>
-
-          <div className="flex gap-2 flex-wrap">
-            <button onClick={guardarEdicion} className="bg-blue-600 text-white px-4 py-2 rounded">
-              💾 Guardar
-            </button>
-
-            <button onClick={() => enviarWhatsApp(o.telefono, o.nombre, o.estado)} className="bg-green-500 text-white px-4 py-2 rounded">
-              📲 WhatsApp
-            </button>
-
-            <button onClick={() => imprimirOrden(o)} className="bg-gray-700 text-white px-4 py-2 rounded">
-              🧾 Imprimir
-            </button>
-          </div>
-        </div>
+        <button onClick={guardarEdicion}className="bg-blue-600 text-white px-4 py-2 rounded">💾 Guardar</button>
+        <button onClick={() => imprimirOrden(o)}className="bg-gray-700 text-white px-4 py-2 rounded">🧾 Imprimir</button>
       </div>
     );
   }
 
-  /* 📋 LISTADO */
+  // 📋 LISTADO
   return (
     <div className="p-4 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">🛠️ Taller</h1>
+      <h1 className="text-3xl font-bold mb-4">🛠️ Ink-Mobile</h1>
 
       <input
         className="border p-2 w-full mb-4"
-        placeholder="🔍 Buscar..."
+        placeholder="Buscar..."
         value={busqueda}
         onChange={(e) => setBusqueda(e.target.value)}
       />
 
+      {/* FORM */}
       <div className="bg-white p-4 rounded shadow mb-6 space-y-2">
         <input className="border p-2 w-full" placeholder="Nombre" value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} />
         <input className="border p-2 w-full" placeholder="Teléfono" value={form.telefono} onChange={(e) => setForm({ ...form, telefono: e.target.value })} />
+        <input className="border p-2 w-full" placeholder="DNI" value={form.dni} onChange={(e) => setForm({ ...form, dni: e.target.value })} />
         <input className="border p-2 w-full" placeholder="Modelo" value={form.modelo} onChange={(e) => setForm({ ...form, modelo: e.target.value })} />
         <input className="border p-2 w-full" placeholder="Problema" value={form.problema} onChange={(e) => setForm({ ...form, problema: e.target.value })} />
+        <input className="border p-2 w-full" placeholder="Código desbloqueo" value={form.codigo} onChange={(e) => setForm({ ...form, codigo: e.target.value })} />
         <textarea className="border p-2 w-full" placeholder="Notas" value={form.notas} onChange={(e) => setForm({ ...form, notas: e.target.value })} />
         <input className="border p-2 w-full" placeholder="Presupuesto (€)" value={form.presupuesto} onChange={(e) => setForm({ ...form, presupuesto: e.target.value })} />
-
-        <select className="border p-2 w-full" value={form.estado} onChange={(e) => setForm({ ...form, estado: e.target.value })}>
-          <option value="RECIBIDO">Recibido</option>
-          <option value="PENDIENTE">Pendiente</option>
-          <option value="ESPERA">Espera</option>
-          <option value="FINALIZADO">Finalizado</option>
-        </select>
 
         <button onClick={crearOrden} className="bg-blue-600 text-white p-2 w-full">
           ➕ Crear orden
         </button>
       </div>
 
+      {/* TABLA */}
       <table className="w-full border">
-        <thead>
-          <tr>
-            <th>Nº</th>
-            <th>Cliente</th>
-            <th>Modelo</th>
-            <th>Presupuesto</th>
-            <th>Estado</th>
-            <th></th>
-          </tr>
-        </thead>
-
         <tbody>
           {filtradas.map((o) => (
-            <tr key={o.id} className="border">
-              <td>{o.numero}</td>
+            <tr key={o.id}>
               <td>{o.nombre}</td>
               <td>{o.modelo}</td>
-              <td>{o.presupuesto} €</td>
-
               <td>
-                <select value={o.estado} onChange={(e) => cambiarEstado(o.id, e.target.value)}>
-                  <option value="RECIBIDO">Recibido</option>
-                  <option value="PENDIENTE">Pendiente</option>
-                  <option value="ESPERA">Espera</option>
-                  <option value="FINALIZADO">Finalizado</option>
-                </select>
-              </td>
-
-              <td className="space-x-2">
                 <button onClick={() => setOrdenSeleccionada(o)}>👁️</button>
                 <button onClick={() => enviarWhatsApp(o.telefono, o.nombre, o.estado)}>📲</button>
                 <button onClick={() => eliminarOrden(o.id)}>❌</button>
