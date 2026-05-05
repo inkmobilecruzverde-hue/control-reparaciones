@@ -1,18 +1,18 @@
 {
-  "name": "Taller Reparaciones",
-  "short_name": "Taller",
+  "name": "Ink-Mobile",
+  "short_name": "InkMobile",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "/icon.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icon.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
