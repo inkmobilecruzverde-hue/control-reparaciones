@@ -131,7 +131,13 @@ export default function Home() {
         </head>
         <body>
 
-          <h1>🛠️ TU TALLER</h1>
+          <h1>🛠️ Ink-Mobile</h1>
+
+<div style="text-align:center; font-size:12px;">
+  CIF: E56261365<br/>
+  TEL: 600 639 228<br/>
+  C/ CRUZ VERDE Nº22
+</div>
 
           <div class="linea"></div>
 
