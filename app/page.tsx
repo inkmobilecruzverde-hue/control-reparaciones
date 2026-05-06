@@ -3,7 +3,9 @@
 import SignatureCanvas from "react-signature-canvas";
 import { useRef } from "react";
 import { useState, useEffect } from "react";
-import { db } from "@/firebase/config";
+import { db, auth } from "@/firebase/config";
+import { onAuthStateChanged } from "firebase/auth";
+import { useRouter } from "next/navigation";
 import {
 collection,
 addDoc,
@@ -35,6 +37,8 @@ const [ordenes, setOrdenes] = useState<Orden[]>([]);
 const [busqueda, setBusqueda] = useState("");
 const [filtroEstado, setFiltroEstado] = useState("TODOS");
 const [ordenSeleccionada, setOrdenSeleccionada] = useState<Orden | null>(null);
+const router = useRouter();
+const [checkingAuth, setCheckingAuth] = useState(true);
 
 const [form, setForm] = useState({
 nombre: "",
@@ -97,6 +101,25 @@ setOrdenes(datos);
 useEffect(() => {
 cargarOrdenes();
 }, []);
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      router.push("/login");
+    } else {
+      setCheckingAuth(false);
+    }
+  });
+
+  if (checkingAuth) {
+  return (
+    <div className="p-10 text-center">
+      Cargando...
+    </div>
+  );
+}
+
+return () => unsubscribe();
+}, [router]);
 
 const crearOrden = async () => {
 if (!form.nombre || !form.telefono) return;
