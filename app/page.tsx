@@ -54,6 +54,11 @@ estado: "RECIBIDO",
 });
 const firmaRef = useRef<any>(null);
 const estados = ["RECIBIDO", "PENDIENTE", "ESPERA", "FINALIZADO"];
+const [mounted, setMounted] = useState(false);
+
+useEffect(() => {
+  setMounted(true);
+}, []);
 
 // 🔒 ESC + bloqueo scroll
 useEffect(() => {
@@ -384,6 +389,7 @@ return ( <div className="p-4 max-w-7xl mx-auto">
 <div className="border rounded p-2">
   <p className="text-sm mb-2 font-bold">Firma cliente</p>
 
+  {mounted && (
   <SignatureCanvas
     ref={firmaRef}
     penColor="black"
@@ -393,6 +399,7 @@ return ( <div className="p-4 max-w-7xl mx-auto">
       className: "border w-full bg-white",
     }}
   />
+)}
 
   <button
     onClick={() => firmaRef.current?.clear()}
