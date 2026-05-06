@@ -389,10 +389,11 @@ return ( <div className="p-4 max-w-7xl mx-auto">
 
 <div className="border rounded p-2">
   <p className="text-sm mb-2 font-bold">Firma cliente</p>
-
-  {mounted && (
+{mounted && (
   <SignatureCanvas
-    ref={firmaRef}
+    ref={(ref) => {
+      firmaRef.current = ref;
+    }}
     penColor="black"
     canvasProps={{
       width: 450,
