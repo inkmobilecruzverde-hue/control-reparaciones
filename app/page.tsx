@@ -52,7 +52,7 @@ notas: "",
 presupuesto: "",
 estado: "RECIBIDO",
 });
-const firmaRef = useRef(null);
+const firmaRef = useRef<any>(null);
 const estados = ["RECIBIDO", "PENDIENTE", "ESPERA", "FINALIZADO"];
 const [mounted, setMounted] = useState(false);
 
@@ -147,8 +147,8 @@ if (!ordenSeleccionada) return;
 
 
 const firma = firmaRef.current
-  ?.getTrimmedCanvas()
-  .toDataURL("image/png");
+  ? firmaRef.current.getTrimmedCanvas().toDataURL("image/png")
+  : "";
 
 const datosActualizados = {
   ...ordenSeleccionada,
