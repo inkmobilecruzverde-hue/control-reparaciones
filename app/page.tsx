@@ -1,5 +1,7 @@
 "use client";
 
+import SignatureCanvas from "react-signature-canvas";
+import { useRef } from "react";
 import { useState, useEffect } from "react";
 import { db } from "@/firebase/config";
 import {
@@ -25,6 +27,7 @@ notas?: string;
 presupuesto?: string;
 estado: string;
 fecha?: any;
+firma?: string | null;
 };
 
 export default function Home() {
@@ -45,7 +48,7 @@ notas: "",
 presupuesto: "",
 estado: "RECIBIDO",
 });
-
+const firmaRef = useRef<SignatureCanvas>(null);
 const estados = ["RECIBIDO", "PENDIENTE", "ESPERA", "FINALIZADO"];
 
 // 🔒 ESC + bloqueo scroll
@@ -132,6 +135,11 @@ window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(msg)}`);
 
 const guardarEdicion = async () => {
 if (!ordenSeleccionada) return;
+const firma = firmaRef.current
+  ?.getTrimmedCanvas()
+  .toDataURL("image/png");
+
+ordenSeleccionada.firma = firma;
 const { id, ...datos } = ordenSeleccionada;
 await updateDoc(doc(db, "ordenes", id), datos as any);
 setOrdenSeleccionada(null);
@@ -178,11 +186,20 @@ ventana?.document.write(`
       <hr/>
 
       <p><b>Estado:</b> ${orden.estado}</p>
+
+<hr/>
+
+<p><b>Firma cliente:</b></p>
+
+${
+  orden.firma
+    ? `<img src="${orden.firma}" style="width:250px;border:1px solid #000;padding:5px;" />`
+    : `<div style="height:80px;border-bottom:1px solid #000;">
+    
+    </div>`
+}
       
       
-
-
-
       <br/><br/>
 <div style="margin-top:40px;padding-top:15px;border-top:1px solid #000;font-size:9px;line-height:1.5;text-align:justify;width:100%;">
 
@@ -210,8 +227,7 @@ EL SERVICIO TIENE UN COSTE DE 1€ DIARIO A CONTAR PASADOS 30 DÍAS DE LA FECHA 
 
 </div>
 
-<br/><br/>
-      Firma: ___________________
+
 
       <script>window.print()</script>
     </body>
@@ -354,6 +370,26 @@ return ( <div className="p-4 max-w-7xl mx-auto">
           {estados.map(e => <option key={e}>{e}</option>)}
         </select>
 
+<div className="border rounded p-2">
+  <p className="text-sm mb-2 font-bold">Firma cliente</p>
+
+  <SignatureCanvas
+    ref={firmaRef}
+    penColor="black"
+    canvasProps={{
+      width: 450,
+      height: 150,
+      className: "border w-full bg-white",
+    }}
+  />
+
+  <button
+    onClick={() => firmaRef.current?.clear()}
+    className="bg-red-500 text-white px-3 py-1 rounded mt-2"
+  >
+    Limpiar firma
+  </button>
+</div>
         <div className="flex gap-3 pt-2">
           <button onClick={guardarEdicion} className="bg-blue-600 text-white px-4 py-2 rounded">💾 Guardar</button>
           <button onClick={() => imprimirOrden(ordenSeleccionada)} className="bg-gray-700 text-white px-4 py-2 rounded">🧾 Imprimir</button>
