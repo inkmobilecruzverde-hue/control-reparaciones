@@ -346,7 +346,7 @@ return ( <div className="p-4 max-w-7xl mx-auto">
     <button onClick={crearOrden} className="bg-blue-600 text-white p-2 w-full">➕ Crear orden</button>
   </div>
 
-  <table className="w-full border">
+  <table className="w-full border hidden md:table">
     <thead>
       <tr>
         <th>Cliente</th>
@@ -386,6 +386,71 @@ return ( <div className="p-4 max-w-7xl mx-auto">
       ))}
     </tbody>
   </table>
+  <div className="md:hidden space-y-4 mt-4">
+  {filtradas.map((o) => (
+    <div
+      key={o.id}
+      className="bg-white rounded-xl shadow p-4 border space-y-3"
+    >
+      <div>
+        <p className="text-lg font-bold">{o.nombre}</p>
+        <p className="text-sm text-gray-500">{o.modelo}</p>
+      </div>
+
+      <div className="flex justify-between text-sm">
+        <span>Estado:</span>
+        <span className="font-bold">{o.estado}</span>
+      </div>
+
+      <div className="flex justify-between text-sm">
+        <span>Presupuesto:</span>
+        <span>{o.presupuesto || "-"} €</span>
+      </div>
+
+      <select
+        value={o.estado}
+        onChange={(e) => cambiarEstado(o.id, e.target.value)}
+        className="w-full border p-2 rounded"
+      >
+        {estados.map((e) => (
+          <option key={e}>{e}</option>
+        ))}
+      </select>
+
+      <div className="grid grid-cols-4 gap-2 pt-2">
+        <button
+          onClick={() => setOrdenSeleccionada(o)}
+          className="bg-blue-500 text-white py-2 rounded"
+        >
+          👁️
+        </button>
+
+        <button
+          onClick={() =>
+            enviarWhatsApp(o.telefono, o.nombre, o.estado)
+          }
+          className="bg-green-500 text-white py-2 rounded"
+        >
+          📲
+        </button>
+
+        <button
+          onClick={() => imprimirOrden(o)}
+          className="bg-gray-700 text-white py-2 rounded"
+        >
+          🧾
+        </button>
+
+        <button
+          onClick={() => eliminarOrden(o.id)}
+          className="bg-red-500 text-white py-2 rounded"
+        >
+          ❌
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
 
   {/* MODAL PRO++ */}
   {ordenSeleccionada && (
