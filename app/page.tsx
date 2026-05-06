@@ -52,7 +52,7 @@ notas: "",
 presupuesto: "",
 estado: "RECIBIDO",
 });
-const firmaRef = useRef<SignatureCanvas>(null);
+const firmaRef = useRef<any>(null);
 const estados = ["RECIBIDO", "PENDIENTE", "ESPERA", "FINALIZADO"];
 
 // 🔒 ESC + bloqueo scroll
@@ -139,15 +139,23 @@ window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(msg)}`);
 
 const guardarEdicion = async () => {
 if (!ordenSeleccionada) return;
+
+
 const firma = firmaRef.current
   ?.getTrimmedCanvas()
   .toDataURL("image/png");
 
-ordenSeleccionada.firma = firma;
-const { id, ...datos } = ordenSeleccionada;
+const datosActualizados = {
+  ...ordenSeleccionada,
+  firma: firma || "",
+};
+
+const { id, ...datos } = datosActualizados;
+
 await updateDoc(doc(db, "ordenes", id), datos as any);
-setOrdenSeleccionada(null);
-cargarOrdenes();
+
+  setOrdenSeleccionada(null);
+  cargarOrdenes();
 };
 
 const imprimirOrden = (orden: Orden) => {
@@ -197,15 +205,14 @@ ventana?.document.write(`
 
 ${
   orden.firma
-    ? `<img src="${orden.firma}" style="width:250px;border:1px solid #000;padding:5px;" />`
-    : `<div style="height:80px;border-bottom:1px solid #000;">
-    
-    </div>`
+    ? `<img src="${orden.firma}"
+        style="width:150px;height:60px;object-fit:contain;border:1px #000;padding:5px;" />`
+    : `<div style="height:60px;border-bottom:1px #000;"></div>`
 }
       
       
       <br/><br/>
-<div style="margin-top:40px;padding-top:15px;border-top:1px solid #000;font-size:9px;line-height:1.5;text-align:justify;width:100%;">
+<div style="margin-top:40px;padding-top:15px;border-top:1px solid #ffffff;font-size:9px;line-height:1.5;text-align:justify;width:100%;">
 
 <b>IMPORTANTE:</b> SE TIENE QUE PRESENTAR ESTE RESGUARDO DE DEPÓSITO PARA RETIRAR SU APARATO.
 EN CASO DE NO PRESENTARLO, SE DEBE ACREDITAR SU TITULARIDAD ANTE LA EMPRESA.
