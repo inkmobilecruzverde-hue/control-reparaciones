@@ -1,6 +1,10 @@
 "use client";
 
-import SignatureCanvas from "react-signature-canvas";
+import dynamic from "next/dynamic";
+const SignatureCanvas = dynamic(
+  () => import("react-signature-canvas"),
+  { ssr: false }
+);
 import { useRef } from "react";
 import { useState, useEffect } from "react";
 import { db } from "@/firebase/config";
