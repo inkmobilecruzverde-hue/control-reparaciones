@@ -110,15 +110,9 @@ useEffect(() => {
     }
   });
 
-  if (checkingAuth) {
-  return (
-    <div className="p-10 text-center">
-      Cargando...
-    </div>
-  );
-}
-
-return () => unsubscribe();
+  return () => {
+    unsubscribe();
+  };
 }, [router]);
 
 const crearOrden = async () => {
@@ -305,6 +299,13 @@ return coincideBusqueda && coincideEstado;
 
 });
 
+if (checkingAuth) {
+  return (
+    <div className="p-10 text-center">
+      Cargando...
+    </div>
+  );
+}
 return ( <div className="p-4 max-w-7xl mx-auto">
 
 
