@@ -30,6 +30,7 @@ presupuesto?: string;
 estado: string;
 fecha?: any;
 firma?: string | null;
+etiqueta?: string;
 };
 
 export default function Home() {
@@ -51,9 +52,17 @@ codigo: "",
 notas: "",
 presupuesto: "",
 estado: "RECIBIDO",
+etiqueta: "",
 });
 const firmaRef = useRef<any>(null);
 const estados = ["RECIBIDO", "PENDIENTE", "ESPERA", "FINALIZADO"];
+const etiquetas = [
+  "NORMAL",
+  "URGENTE",
+  "GARANTÍA",
+  "ESPERANDO PIEZA",
+  "SIN ARREGLO",
+];
 <SignatureCanvas
   ref={firmaRef}
   penColor="black"
@@ -136,6 +145,7 @@ setForm({
   notas: "",
   presupuesto: "",
   estado: "RECIBIDO",
+  etiqueta: "",
 });
 
 cargarOrdenes();
@@ -361,6 +371,17 @@ return ( <div className="p-4 max-w-7xl mx-auto">
     <select className="border p-2 w-full" value={form.estado} onChange={(e) => setForm({ ...form, estado: e.target.value })}>
       {estados.map(e => <option key={e}>{e}</option>)}
     </select>
+    <select
+  className="border p-2 w-full"
+  value={form.etiqueta}
+  onChange={(e) =>
+    setForm({ ...form, etiqueta: e.target.value })
+  }
+>
+  {etiquetas.map((e) => (
+    <option key={e}>{e}</option>
+  ))}
+</select>
 
     <button onClick={crearOrden} className="bg-blue-600 text-white p-2 w-full">➕ Crear orden</button>
   </div>
@@ -381,6 +402,25 @@ return ( <div className="p-4 max-w-7xl mx-auto">
         <tr key={o.id} className="border">
           <td>{o.nombre}</td>
           <td>{o.modelo}</td>
+          <td>
+  <span
+    className={`px-2 py-1 rounded text-white text-xs
+      ${
+        o.etiqueta === "URGENTE"
+          ? "bg-red-500"
+          : o.etiqueta === "GARANTÍA"
+          ? "bg-blue-500"
+          : o.etiqueta === "ESPERANDO PIEZA"
+          ? "bg-yellow-500"
+          : o.etiqueta === "SIN ARREGLO"
+          ? "bg-gray-700"
+          : "bg-green-500"
+      }
+    `}
+  >
+    {o.etiqueta || "NORMAL"}
+  </span>
+</td>
           <td>{o.presupuesto || "-"} €</td>
 
           <td>
