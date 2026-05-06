@@ -420,7 +420,7 @@ return ( <div className="p-4 max-w-7xl mx-auto">
       <div className="grid grid-cols-4 gap-2 pt-2">
         <button
           onClick={() => setOrdenSeleccionada(o)}
-          className="bg-blue-500 text-white py-2 rounded"
+          className="bg-blue-600 active:scale-95 text-white py-3 rounded-xl text-lg"
         >
           👁️
         </button>
@@ -429,21 +429,21 @@ return ( <div className="p-4 max-w-7xl mx-auto">
           onClick={() =>
             enviarWhatsApp(o.telefono, o.nombre, o.estado)
           }
-          className="bg-green-500 text-white py-2 rounded"
+          className="bg-green-600 active:scale-95 text-white py-3 rounded-xl text-lg"
         >
           📲
         </button>
 
         <button
           onClick={() => imprimirOrden(o)}
-          className="bg-gray-700 text-white py-2 rounded"
+          className="bg-gray-800 active:scale-95 text-white py-3 rounded-xl text-lg"
         >
           🧾
         </button>
 
         <button
           onClick={() => eliminarOrden(o.id)}
-          className="bg-red-500 text-white py-2 rounded"
+          className="bg-red-600 active:scale-95 text-white py-3 rounded-xl text-lg"
         >
           ❌
         </button>
