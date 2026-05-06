@@ -146,10 +146,13 @@ const guardarEdicion = async () => {
 if (!ordenSeleccionada) return;
 
 
-const firma = firmaRef.current
-  ? firmaRef.current.getTrimmedCanvas().toDataURL("image/png")
-  : "";
-
+const firma =
+  firmaRef.current &&
+  typeof (firmaRef.current as any).getTrimmedCanvas === "function"
+    ? (firmaRef.current as any)
+        .getTrimmedCanvas()
+        .toDataURL("image/png")
+    : "";
 const datosActualizados = {
   ...ordenSeleccionada,
   firma: firma || "",
