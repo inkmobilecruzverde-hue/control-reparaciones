@@ -154,9 +154,28 @@ await deleteDoc(doc(db, "ordenes", id));
 cargarOrdenes();
 };
 
-const enviarWhatsApp = (telefono: string, nombre: string, estado: string) => {
-const msg = `Hola ${nombre}, tu equipo está en estado: ${estado}`;
-window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(msg)}`);
+const enviarWhatsApp = (
+  telefono: string,
+  nombre: string,
+  estado: string
+) => {
+
+  const numeroLimpio = telefono
+    .replace(/\s+/g, "")
+    .replace(/-/g, "")
+    .replace(/\(/g, "")
+    .replace(/\)/g, "");
+
+  const numeroFinal = numeroLimpio.startsWith("34")
+    ? numeroLimpio
+    : `34${numeroLimpio}`;
+
+  const msg = `Hola ${nombre}, tu equipo está en estado: ${estado}`;
+
+  window.open(
+    `https://api.whatsapp.com/send?phone=${numeroFinal}&text=${encodeURIComponent(msg)}`,
+    "_blank"
+  );
 };
 
 const guardarEdicion = async () => {
