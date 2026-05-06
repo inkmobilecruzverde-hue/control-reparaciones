@@ -52,7 +52,7 @@ notas: "",
 presupuesto: "",
 estado: "RECIBIDO",
 });
-const firmaRef = useRef<any>(null);
+const firmaRef = useRef(null);
 const estados = ["RECIBIDO", "PENDIENTE", "ESPERA", "FINALIZADO"];
 const [mounted, setMounted] = useState(false);
 
@@ -390,17 +390,20 @@ return ( <div className="p-4 max-w-7xl mx-auto">
 <div className="border rounded p-2">
   <p className="text-sm mb-2 font-bold">Firma cliente</p>
 {mounted && (
-  <SignatureCanvas
-    ref={(ref) => {
-      firmaRef.current = ref;
-    }}
-    penColor="black"
-    canvasProps={{
-      width: 450,
-      height: 150,
-      className: "border w-full bg-white",
-    }}
-  />
+  <div ref={(el) => {
+    if (el && !firmaRef.current) {
+      firmaRef.current = el;
+    }
+  }}>
+    <SignatureCanvas
+      penColor="black"
+      canvasProps={{
+        width: 450,
+        height: 150,
+        className: "border w-full bg-white",
+      }}
+    />
+  </div>
 )}
 
   <button
