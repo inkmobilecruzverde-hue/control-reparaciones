@@ -309,6 +309,7 @@ return ( <div className="p-4 max-w-7xl mx-auto">
     <input className="border p-2 w-full" placeholder="Nº Serie"value={form.serie || ""}onChange={(e) => setForm({ ...form, serie: e.target.value })}/>
     <input className="border p-2 w-full" placeholder="Problema" value={form.problema} onChange={(e) => setForm({ ...form, problema: e.target.value })} />
     <input className="border p-2 w-full" placeholder="Código desbloqueo" value={form.codigo} onChange={(e) => setForm({ ...form, codigo: e.target.value })} />
+    <input className="border p-2 w-full" placeholder="Notas " value={form.notas} onChange={(e) => setForm({ ...form, notas: e.target.value })} />
     <input className="border p-2 w-full" placeholder="Presupuesto (€)" value={form.presupuesto} onChange={(e) => setForm({ ...form, presupuesto: e.target.value })} />
 
     <select className="border p-2 w-full" value={form.estado} onChange={(e) => setForm({ ...form, estado: e.target.value })}>
@@ -381,7 +382,7 @@ return ( <div className="p-4 max-w-7xl mx-auto">
         <input className="border p-2 w-full" value={ordenSeleccionada.problema} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, problema: e.target.value })} />
         <input className="border p-2 w-full" value={ordenSeleccionada.codigo || ""} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, codigo: e.target.value })} />
         <input className="border p-2 w-full" value={ordenSeleccionada.presupuesto || ""} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, presupuesto: e.target.value })} />
-
+        <input className="border p-2 w-full" value={ordenSeleccionada.notas || ""} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, notas: e.target.value })} />
         <select className="border p-2 w-full" value={ordenSeleccionada.estado} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, estado: e.target.value })}>
           {estados.map(e => <option key={e}>{e}</option>)}
         </select>
