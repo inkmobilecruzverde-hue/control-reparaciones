@@ -1,10 +1,6 @@
 "use client";
 
-import dynamic from "next/dynamic";
-const SignatureCanvas = dynamic(
-  () => import("react-signature-canvas"),
-  { ssr: false }
-);
+import SignatureCanvas from "react-signature-canvas";
 import { useRef } from "react";
 import { useState, useEffect } from "react";
 import { db } from "@/firebase/config";
@@ -54,11 +50,15 @@ estado: "RECIBIDO",
 });
 const firmaRef = useRef<any>(null);
 const estados = ["RECIBIDO", "PENDIENTE", "ESPERA", "FINALIZADO"];
-const [mounted, setMounted] = useState(false);
-
-useEffect(() => {
-  setMounted(true);
-}, []);
+<SignatureCanvas
+  ref={firmaRef}
+  penColor="black"
+  canvasProps={{
+    width: 450,
+    height: 150,
+    className: "border w-full bg-white",
+  }}
+/>
 
 // 🔒 ESC + bloqueo scroll
 useEffect(() => {
