@@ -484,6 +484,49 @@ return ( <div className="p-4 max-w-7xl mx-auto">
         <button onClick={() => setOrdenSeleccionada(null)} className="absolute top-2 right-2 text-xl">✖</button>
 
         <h2 className="text-xl font-bold">Orden {ordenSeleccionada.numero}</h2>
+        {ordenSeleccionada && (
+  <div className="bg-gray-100 p-3 rounded text-sm">
+    <p className="font-bold mb-2">
+      📋 Historial cliente
+    </p>
+
+    {ordenes
+      .filter(
+        (o) =>
+          o.telefono === ordenSeleccionada.telefono &&
+          o.id !== ordenSeleccionada.id
+      )
+      .slice(0, 5)
+      .map((o) => (
+        <div
+          key={o.id}
+          className="border-b py-1"
+        >
+          <p>
+            <b>{o.modelo}</b>
+          </p>
+
+          <p className="text-gray-600">
+            {o.problema}
+          </p>
+
+          <p className="text-xs">
+            Estado: {o.estado}
+          </p>
+        </div>
+      ))}
+
+    {ordenes.filter(
+      (o) =>
+        o.telefono === ordenSeleccionada.telefono &&
+        o.id !== ordenSeleccionada.id
+    ).length === 0 && (
+      <p className="text-gray-500">
+        Sin historial
+      </p>
+    )}
+  </div>
+)}
 
         <input className="border p-2 w-full" value={ordenSeleccionada.nombre} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, nombre: e.target.value })} />
         <input className="border p-2 w-full" value={ordenSeleccionada.telefono} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, telefono: e.target.value })} />
