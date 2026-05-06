@@ -392,22 +392,17 @@ return ( <div className="p-4 max-w-7xl mx-auto">
 
 <div className="border rounded p-2">
   <p className="text-sm mb-2 font-bold">Firma cliente</p>
-{mounted && (
-  <div ref={(el) => {
-    if (el && !firmaRef.current) {
-      firmaRef.current = el;
-    }
-  }}>
+
     <SignatureCanvas
-      penColor="black"
-      canvasProps={{
-        width: 450,
-        height: 150,
-        className: "border w-full bg-white",
-      }}
-    />
-  </div>
-)}
+  ref={firmaRef}
+  penColor="black"
+  canvasProps={{
+    width: 450,
+    height: 150,
+    className: "border w-full bg-white",
+  }}
+/>
+
 
   <button
     onClick={() => firmaRef.current?.clear()}
