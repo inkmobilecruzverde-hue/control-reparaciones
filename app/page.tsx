@@ -618,7 +618,7 @@ return ( <div className="p-4 max-w-7xl mx-auto">
       onClick={() => setOrdenSeleccionada(null)}
     >
       <div
-        className="bg-white p-6 rounded shadow w-full max-w-lg space-y-2 relative transform transition-all scale-100 opacity-100"
+        className="bg-white p-6 rounded shadow w-full max-w-lg space-y-2 relative transform transition-all scale-100 opacity-100 max-h-[90vh] overflow-y-auto pb-24"
         onClick={(e) => e.stopPropagation()}
       >
         <button onClick={() => setOrdenSeleccionada(null)} className="absolute top-2 right-2 text-xl">✖</button>
