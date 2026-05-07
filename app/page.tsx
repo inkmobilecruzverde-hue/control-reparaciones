@@ -551,11 +551,11 @@ return ( <div className="p-4 max-w-7xl mx-auto">
         </button>
 
         <button
-  onClick={() => compartirOrden(o)}
-  className="bg-indigo-600 active:scale-95 text-white py-3 rounded-xl text-lg"
->
-  📤
-</button>
+          onClick={() => compartirOrden(o)}
+          className="bg-indigo-600 active:scale-95 text-white py-3 rounded-xl text-lg"
+        >
+          📤
+        </button>
 
         <button
           onClick={() => imprimirOrden(o)}
