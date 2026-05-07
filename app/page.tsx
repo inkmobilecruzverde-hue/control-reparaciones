@@ -165,11 +165,29 @@ cargarOrdenes();
 };
 
 const enviarWhatsApp = (
-  
   telefono: string,
   nombre: string,
   estado: string
 ) => {
+
+  const numeroLimpio = telefono
+    .replace(/\s+/g, "")
+    .replace(/-/g, "")
+    .replace(/\(/g, "")
+    .replace(/\)/g, "");
+
+  const numeroFinal = numeroLimpio.startsWith("34")
+    ? numeroLimpio
+    : `34${numeroLimpio}`;
+
+  const msg = `Hola ${nombre}, tu equipo está en estado: ${estado}`;
+
+  window.open(
+    `https://api.whatsapp.com/send?phone=${numeroFinal}&text=${encodeURIComponent(msg)}`,
+    "_blank"
+  );
+};
+
 const compartirOrden = async (orden: Orden) => {
 
   const texto = `
@@ -205,23 +223,6 @@ Estado: ${orden.estado}
   } catch (error) {
     console.log(error);
   }
-};
-  const numeroLimpio = telefono
-    .replace(/\s+/g, "")
-    .replace(/-/g, "")
-    .replace(/\(/g, "")
-    .replace(/\)/g, "");
-
-  const numeroFinal = numeroLimpio.startsWith("34")
-    ? numeroLimpio
-    : `34${numeroLimpio}`;
-
-  const msg = `Hola ${nombre}, tu equipo está en estado: ${estado}`;
-
-  window.open(
-    `https://api.whatsapp.com/send?phone=${numeroFinal}&text=${encodeURIComponent(msg)}`,
-    "_blank"
-  );
 };
 
 const guardarEdicion = async () => {
@@ -550,11 +551,11 @@ return ( <div className="p-4 max-w-7xl mx-auto">
         </button>
 
         <button
-          onClick={() => compartirOrden(o)}
-          className="bg-indigo-600 active:scale-95 text-white py-3 rounded-xl text-lg"
-        >
-          📤
-        </button>
+  onClick={() => compartirOrden(o)}
+  className="bg-indigo-600 active:scale-95 text-white py-3 rounded-xl text-lg"
+>
+  📤
+</button>
 
         <button
           onClick={() => imprimirOrden(o)}
