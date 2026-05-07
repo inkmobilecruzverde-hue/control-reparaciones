@@ -256,6 +256,28 @@ const fecha = new Date(orden.fecha);
 
 ventana?.document.write(`
   <html>
+
+<style>
+
+@media print {
+
+  @page {
+    margin: 8mm;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  button {
+    display: none !important;
+  }
+
+}
+
+</style>
+
     <body style="font-family:Arial;padding:25px;max-width:800px;margin:auto;color:#000;">
       <h2 style="text-align:center">🛠️ Ink-Mobile</h2>
 
