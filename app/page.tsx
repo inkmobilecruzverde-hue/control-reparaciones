@@ -716,6 +716,12 @@ return ( <div className="p-4 max-w-7xl mx-auto">
 </div>
         <div className="flex gap-3 pt-2">
           <button onClick={guardarEdicion} className="bg-blue-600 text-white px-4 py-2 rounded">💾 Guardar</button>
+          <button
+    onClick={() => compartirOrden(ordenSeleccionada)}
+    className="bg-indigo-600 text-white px-4 py-2 rounded"
+  >
+    📤 Compartir
+  </button>
           <button onClick={() => imprimirOrden(ordenSeleccionada)} className="bg-gray-700 text-white px-4 py-2 rounded">🧾 Imprimir</button>
         </div>
 
