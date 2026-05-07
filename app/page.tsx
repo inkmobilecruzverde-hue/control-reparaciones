@@ -333,7 +333,7 @@ EL SERVICIO TIENE UN COSTE DE 1€ DIARIO A CONTAR PASADOS 30 DÍAS DE LA FECHA 
 
       <div style="margin-top:30px;text-align:center;">
   <button
-    onclick="history.back()"
+    onclick="window.location.href='/'"
     style="
       padding:12px 20px;
       background:#111827;
