@@ -165,11 +165,47 @@ cargarOrdenes();
 };
 
 const enviarWhatsApp = (
+  
   telefono: string,
   nombre: string,
   estado: string
 ) => {
+const compartirOrden = async (orden: Orden) => {
 
+  const texto = `
+🛠️ Ink-Mobile
+
+Orden: ${orden.numero}
+
+Cliente: ${orden.nombre}
+
+Modelo: ${orden.modelo}
+
+Problema:
+${orden.problema}
+
+Estado: ${orden.estado}
+  `;
+
+  try {
+
+    if (navigator.share) {
+
+      await navigator.share({
+        title: `Orden ${orden.numero}`,
+        text: texto,
+      });
+
+    } else {
+
+      alert("Tu navegador no soporta compartir");
+
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+};
   const numeroLimpio = telefono
     .replace(/\s+/g, "")
     .replace(/-/g, "")
@@ -496,7 +532,7 @@ return ( <div className="p-4 max-w-7xl mx-auto">
         ))}
       </select>
 
-      <div className="grid grid-cols-4 gap-2 pt-2">
+      <div className="grid grid-cols-5 gap-2 pt-2">
         <button
           onClick={() => setOrdenSeleccionada(o)}
           className="bg-blue-600 active:scale-95 text-white py-3 rounded-xl text-lg"
@@ -512,6 +548,12 @@ return ( <div className="p-4 max-w-7xl mx-auto">
         >
           📲
         </button>
+        <button
+  onClick={() => compartirOrden(o)}
+  className="bg-indigo-600 active:scale-95 text-white py-3 rounded-xl text-lg"
+>
+  📤
+</button>
 
         <button
           onClick={() => imprimirOrden(o)}
