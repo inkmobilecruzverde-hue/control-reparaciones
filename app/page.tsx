@@ -213,7 +213,7 @@ await updateDoc(doc(db, "ordenes", id), datos as any);
 };
 
 const imprimirOrden = (orden: Orden) => {
-const ventana = window.open("", "_blank");
+const ventana = window.open("", "_self");
 const fecha = new Date(orden.fecha);
 
 
@@ -294,7 +294,27 @@ EL SERVICIO TIENE UN COSTE DE 1€ DIARIO A CONTAR PASADOS 30 DÍAS DE LA FECHA 
 
 
 
-      <script>window.print()</script>
+      <div style="margin-top:30px;text-align:center;">
+  <button
+    onclick="window.close()"
+    style="
+      padding:12px 20px;
+      background:#111827;
+      color:white;
+      border:none;
+      border-radius:10px;
+      font-size:16px;
+    "
+  >
+    ⬅ Volver
+  </button>
+</div>
+
+<script>
+  window.onload = () => {
+    window.print();
+  };
+</script>
     </body>
   </html>
 `);
