@@ -30,6 +30,7 @@ presupuesto?: string;
 estado: string;
 fecha?: any;
 firma?: string | null;
+fechaEntrega?: any;
 etiqueta?: string;
 };
 
@@ -55,7 +56,7 @@ estado: "RECIBIDO",
 etiqueta: "",
 });
 const firmaRef = useRef<any>(null);
-const estados = ["RECIBIDO", "PENDIENTE", "ESPERA", "FINALIZADO"];
+const estados = ["RECIBIDO", "PENDIENTE", "ESPERA", "FINALIZADO", "ENTREGADO"];
 const etiquetas = [
   "NORMAL",
   "URGENTE",
@@ -153,9 +154,22 @@ cargarOrdenes();
 
 };
 
-const cambiarEstado = async (id: string, estado: string) => {
-await updateDoc(doc(db, "ordenes", id), { estado });
-cargarOrdenes();
+const cambiarEstado = async (
+  id: string,
+  estado: string
+) => {
+
+  const datos: any = {
+    estado,
+  };
+
+  if (estado === "ENTREGADO") {
+    datos.fechaEntrega = new Date().toISOString();
+  }
+
+  await updateDoc(doc(db, "ordenes", id), datos);
+
+  cargarOrdenes();
 };
 
 const eliminarOrden = async (id: string) => {
@@ -666,6 +680,18 @@ return ( <div className="p-4 max-w-7xl mx-auto">
         <select className="border p-2 w-full" value={ordenSeleccionada.estado} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, estado: e.target.value })}>
           {estados.map(e => <option key={e}>{e}</option>)}
         </select>
+      {ordenSeleccionada.fechaEntrega && (
+  <div className="bg-green-100 p-2 rounded text-sm">
+    📦 Entregado el:
+    <br />
+
+    <b>
+      {new Date(
+        ordenSeleccionada.fechaEntrega
+      ).toLocaleString()}
+    </b>
+  </div>
+)}
 
 <div className="border rounded p-2">
   <p className="text-sm mb-2 font-bold">Firma cliente</p>
