@@ -193,13 +193,9 @@ await deleteDoc(doc(db, "ordenes", id));
 cargarOrdenes();
 };
 
-const enviarWhatsApp = (
-  telefono: string,
-  nombre: string,
-  estado: string
-) => {
+const enviarWhatsApp = (orden: Orden) => {
 
-  const numeroLimpio = telefono
+  const numeroLimpio = orden.telefono
     .replace(/\s+/g, "")
     .replace(/-/g, "")
     .replace(/\(/g, "")
@@ -209,7 +205,52 @@ const enviarWhatsApp = (
     ? numeroLimpio
     : `34${numeroLimpio}`;
 
-  const msg = `Hola ${nombre}, tu equipo está en estado: ${estado}`;
+  let msg = "";
+
+if (orden.estado === "RECIBIDO") {
+  msg = `Hola ${orden.nombre} 👋
+
+Hemos recibido tu ${orden.modelo}
+
+IMEI/Nº Serie:
+${orden.serie || "-"}
+
+Tu orden ya ha sido registrada correctamente.
+
+🛠️ Ink-Mobile`;
+}
+
+else if (orden.estado === "ESPERANDO ACEPTACION") {
+  msg = `Hola ${orden.nombre} 👋
+
+Tu ${orden.modelo} ya ha sido revisado.
+
+Presupuesto reparación:
+${orden.presupuesto || "-"} €
+
+Quedamos pendientes de tu aceptación para continuar.
+
+🛠️ Ink-Mobile`;
+}
+
+else if (orden.estado === "FINALIZADO") {
+  msg = `Hola ${orden.nombre} 👋
+
+Tu ${orden.modelo}
+ya está reparado y listo para entregar.
+
+🛠️ Ink-Mobile`;
+}
+
+else {
+  msg = `Hola ${orden.nombre} 👋
+
+El estado actual de tu equipo es:
+
+${orden.estado}
+
+🛠️ Ink-Mobile`;
+}
 
   window.open(
     `https://api.whatsapp.com/send?phone=${numeroFinal}&text=${encodeURIComponent(msg)}`,
@@ -716,7 +757,7 @@ return ( <div className="p-4 max-w-7xl mx-auto">
 
           <td className="space-x-2">
             <button onClick={() => setOrdenSeleccionada(o)}>👁️</button>
-            <button onClick={() => enviarWhatsApp(o.telefono, o.nombre, o.estado)}>📲</button>
+            <button onClick={() => enviarWhatsApp(o)}>📲</button>
             <button onClick={() => imprimirOrden(o)}>🧾</button>
             <button onClick={() => eliminarOrden(o.id)}>❌</button>
           </td>
