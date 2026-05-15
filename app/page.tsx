@@ -806,7 +806,7 @@ return ( <div className="p-4 max-w-7xl mx-auto">
 
         <button
           onClick={() =>
-            enviarWhatsApp(o.telefono, o.nombre, o.estado)
+            enviarWhatsApp(o)
           }
           className="bg-green-600 active:scale-95 text-white py-3 rounded-xl text-lg"
         >
