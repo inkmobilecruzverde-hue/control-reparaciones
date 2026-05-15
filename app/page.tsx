@@ -13,6 +13,8 @@ getDocs,
 updateDoc,
 deleteDoc,
 doc,
+query,
+orderBy,
 } from "firebase/firestore";
 
 type Orden = {
@@ -100,7 +102,12 @@ return `${año}-${timestamp}`;
 };
 
 const cargarOrdenes = async () => {
-const snapshot = await getDocs(collection(db, "ordenes"));
+const q = query(
+  collection(db, "ordenes"),
+  orderBy("fechaCreacion", "desc")
+);
+
+const snapshot = await getDocs(q);
 const datos: Orden[] = snapshot.docs.map((docu) => ({
 id: docu.id,
 ...(docu.data() as Omit<Orden, "id">),
@@ -133,6 +140,7 @@ await addDoc(collection(db, "ordenes"), {
   ...form,
   numero: generarNumero(),
   fecha: new Date().toISOString(),
+  fechaCreacion: Date.now(),
 });
 
 setForm({
@@ -381,6 +389,31 @@ EL SERVICIO TIENE UN COSTE DE 1€ DIARIO A CONTAR PASADOS 30 DÍAS DE LA FECHA 
   >
     ⬅ Volver
   </button>
+
+  <button
+  onclick="
+    if (navigator.share) {
+      navigator.share({
+  title: 'Orden Ink-Mobile',
+  text: document.body.innerText
+});
+    } else {
+      alert('Tu navegador no soporta compartir');
+    }
+  "
+  style="
+    padding:12px 20px;
+    background:#4f46e5;
+    color:white;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+    margin-left:10px;
+  "
+>
+  📤 Compartir
+</button>
+
 </div>
 
 <script>
