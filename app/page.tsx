@@ -442,6 +442,30 @@ const ingresos = ordenes
 .filter(o => o.estado === "ENTREGADO")
 .reduce((acc, o) => acc + Number(o.presupuesto || 0), 0);
 
+const mesActual = new Date().getMonth();
+const añoActual = new Date().getFullYear();
+
+const ingresosMes = ordenes
+  .filter((o) => {
+    if (
+      o.estado !== "ENTREGADO" ||
+      !o.fechaEntrega
+    )
+      return false;
+
+    const fecha = new Date(o.fechaEntrega);
+
+    return (
+      fecha.getMonth() === mesActual &&
+      fecha.getFullYear() === añoActual
+    );
+  })
+  .reduce(
+    (acc, o) =>
+      acc + Number(o.presupuesto || 0),
+    0
+  );
+
 const filtradas = ordenes.filter((o) => {
 const coincideBusqueda =
 o.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
@@ -475,6 +499,9 @@ return ( <div className="p-4 max-w-7xl mx-auto">
     <div className="bg-green-100 p-3 rounded text-center">Finalizadas: {finalizadas}</div>
     <div className="bg-gray-200 p-3 rounded text-center">Total: {total}</div>
     <div className="bg-emerald-200 p-3 rounded text-center">€ {ingresos}</div>
+    <div className="bg-lime-200 p-3 rounded text-center">
+  Mes: € {ingresosMes}
+</div>
   </div>
 
   <div className="flex gap-2 mb-4">
