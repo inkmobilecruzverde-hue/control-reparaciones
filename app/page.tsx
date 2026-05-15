@@ -548,14 +548,75 @@ return ( <div className="p-4 max-w-7xl mx-auto">
 
   <div className="bg-white p-4 rounded shadow mb-6 space-y-2">
     <input className="border p-2 w-full" placeholder="Nombre" value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} />
-    <input className="border p-2 w-full" placeholder="Teléfono" value={form.telefono} onChange={(e) => setForm({ ...form, telefono: e.target.value })} />
-    <input className="border p-2 w-full" placeholder="DNI" value={form.dni} onChange={(e) => setForm({ ...form, dni: e.target.value })} />
+    <input
+  type="tel"
+  inputMode="numeric"
+  className="border p-2 w-full"
+  placeholder="Teléfono"
+  value={form.telefono}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      telefono: e.target.value,
+    })
+  }
+/>
+    <input
+  autoCapitalize="characters"
+  className="border p-2 w-full"
+  placeholder="DNI"
+  value={form.dni}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      dni: e.target.value.toUpperCase(),
+    })
+  }
+/>
     <input className="border p-2 w-full" placeholder="Modelo" value={form.modelo} onChange={(e) => setForm({ ...form, modelo: e.target.value })} />
-    <input className="border p-2 w-full" placeholder="Nº Serie"value={form.serie || ""}onChange={(e) => setForm({ ...form, serie: e.target.value })}/>
+    <input
+  type="tel"
+  inputMode="numeric"
+  autoCorrect="off"
+  spellCheck={false}
+  className="border p-2 w-full"
+  placeholder="Nº Serie / IMEI"
+  value={form.serie || ""}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      serie: e.target.value,
+    })
+  }
+/>
     <input className="border p-2 w-full" placeholder="Problema" value={form.problema} onChange={(e) => setForm({ ...form, problema: e.target.value })} />
-    <input className="border p-2 w-full" placeholder="Código desbloqueo" value={form.codigo} onChange={(e) => setForm({ ...form, codigo: e.target.value })} />
+    <input
+  type="tel"
+  inputMode="numeric"
+  className="border p-2 w-full"
+  placeholder="Código desbloqueo"
+  value={form.codigo}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      codigo: e.target.value,
+    })
+  }
+/>
     <input className="border p-2 w-full" placeholder="Notas " value={form.notas} onChange={(e) => setForm({ ...form, notas: e.target.value })} />
-    <input className="border p-2 w-full" placeholder="Presupuesto (€)" value={form.presupuesto} onChange={(e) => setForm({ ...form, presupuesto: e.target.value })} />
+    <input
+  type="number"
+  inputMode="decimal"
+  className="border p-2 w-full"
+  placeholder="Presupuesto (€)"
+  value={form.presupuesto}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      presupuesto: e.target.value,
+    })
+  }
+/>
 
     <select className="border p-2 w-full" value={form.estado} onChange={(e) => setForm({ ...form, estado: e.target.value })}>
       {estados.map(e => <option key={e}>{e}</option>)}
