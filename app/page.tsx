@@ -439,8 +439,15 @@ ventana?.document.close();
 
 const total = ordenes.length;
 const recibidos = ordenes.filter(o => o.estado === "RECIBIDO").length;
-const pendientes = ordenes.filter(o => o.estado === "PENDIENTE").length;
-const espera = ordenes.filter(o => o.estado === "ESPERA").length;
+const enRevision = ordenes.filter(
+  (o) => o.estado === "EN REVISIÓN"
+).length;
+const esperandoAceptacion = ordenes.filter(
+  (o) => o.estado === "ESPERANDO ACEPTACIÓN"
+).length;
+const esperandoRecambio = ordenes.filter(
+  (o) => o.estado === "ESPERANDO RECAMBIO"
+).length;
 const finalizadas = ordenes.filter(o => o.estado === "FINALIZADO").length;
 
 const ingresos = ordenes
@@ -487,7 +494,8 @@ if (checkingAuth) {
     </div>
   );
 }
-return ( <div className="p-4 max-w-7xl mx-auto">
+return ( 
+<div className="p-4 max-w-7xl mx-auto">
 
 
   <h1 className="text-3xl font-bold mb-4">🛠️ Ink-Mobile</h1>
@@ -530,13 +538,33 @@ return ( <div className="p-4 max-w-7xl mx-auto">
 </div>
 
   <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mb-4">
-    <div className="bg-blue-100 p-3 rounded text-center">Recibidos: {recibidos}</div>
-    <div className="bg-yellow-100 p-3 rounded text-center">Pendientes: {pendientes}</div>
-    <div className="bg-orange-100 p-3 rounded text-center">Espera: {espera}</div>
-    <div className="bg-green-100 p-3 rounded text-center">Finalizadas: {finalizadas}</div>
-    <div className="bg-gray-200 p-3 rounded text-center">Total: {total}</div>
-    <div className="bg-emerald-200 p-3 rounded text-center">€ {ingresos}</div>
-  </div>
+   <div className="bg-blue-100 p-3 rounded text-center">
+  Recibidos: {recibidos}
+</div>
+
+<div className="bg-yellow-100 p-3 rounded text-center">
+  En revisión: {enRevision}
+</div>
+
+<div className="bg-orange-100 p-3 rounded text-center">
+  Esperando aceptación: {esperandoAceptacion}
+</div>
+
+<div className="bg-amber-100 p-3 rounded text-center">
+  Esperando recambio: {esperandoRecambio}
+</div>
+
+<div className="bg-green-100 p-3 rounded text-center">
+  Finalizadas: {finalizadas}
+</div>
+
+<div className="bg-gray-200 p-3 rounded text-center">
+  Total: {total}
+</div>
+
+<div className="bg-emerald-200 p-3 rounded text-center">
+  € {ingresos}
+</div>
 
   <div className="flex gap-2 mb-4">
     <input className="border p-2 w-full" placeholder="Buscar..." value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
