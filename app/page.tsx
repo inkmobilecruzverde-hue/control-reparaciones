@@ -731,7 +731,15 @@ return ( <div className="p-4 max-w-7xl mx-auto">
 <div className="border rounded p-2">
   <p className="text-sm mb-2 font-bold">Firma cliente</p>
 
-    
+    <SignatureCanvas
+  ref={firmaRef}
+  penColor="black"
+  canvasProps={{
+    width: 450,
+    height: 150,
+    className: "border w-full bg-white",
+  }}
+/>
 
 
   <button
