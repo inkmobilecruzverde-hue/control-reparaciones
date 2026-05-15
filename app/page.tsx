@@ -41,6 +41,11 @@ const [filtroEstado, setFiltroEstado] = useState("TODOS");
 const [ordenSeleccionada, setOrdenSeleccionada] = useState<Orden | null>(null);
 const router = useRouter();
 const [checkingAuth, setCheckingAuth] = useState(true);
+const [mesSeleccionado, setMesSeleccionado] =
+  useState(new Date().getMonth());
+
+const [añoSeleccionado, setAñoSeleccionado] =
+  useState(new Date().getFullYear());
 
 const [form, setForm] = useState({
 nombre: "",
@@ -441,11 +446,7 @@ const finalizadas = ordenes.filter(o => o.estado === "FINALIZADO").length;
 const ingresos = ordenes
 .filter(o => o.estado === "ENTREGADO")
 .reduce((acc, o) => acc + Number(o.presupuesto || 0), 0);
-
-const mesActual = new Date().getMonth();
-const añoActual = new Date().getFullYear();
-
-const ingresosMes = ordenes
+const ingresosFiltrados = ordenes
   .filter((o) => {
     if (
       o.estado !== "ENTREGADO" ||
@@ -456,8 +457,8 @@ const ingresosMes = ordenes
     const fecha = new Date(o.fechaEntrega);
 
     return (
-      fecha.getMonth() === mesActual &&
-      fecha.getFullYear() === añoActual
+      fecha.getMonth() === mesSeleccionado &&
+      fecha.getFullYear() === añoSeleccionado
     );
   })
   .reduce(
@@ -465,7 +466,6 @@ const ingresosMes = ordenes
       acc + Number(o.presupuesto || 0),
     0
   );
-
 const filtradas = ordenes.filter((o) => {
 const coincideBusqueda =
 o.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
@@ -491,6 +491,43 @@ return ( <div className="p-4 max-w-7xl mx-auto">
 
 
   <h1 className="text-3xl font-bold mb-4">🛠️ Ink-Mobile</h1>
+  <div className="flex gap-2 mb-4">
+
+  <select
+    className="border p-2 rounded"
+    value={mesSeleccionado}
+    onChange={(e) =>
+      setMesSeleccionado(Number(e.target.value))
+    }
+  >
+    <option value={0}>Enero</option>
+    <option value={1}>Febrero</option>
+    <option value={2}>Marzo</option>
+    <option value={3}>Abril</option>
+    <option value={4}>Mayo</option>
+    <option value={5}>Junio</option>
+    <option value={6}>Julio</option>
+    <option value={7}>Agosto</option>
+    <option value={8}>Septiembre</option>
+    <option value={9}>Octubre</option>
+    <option value={10}>Noviembre</option>
+    <option value={11}>Diciembre</option>
+  </select>
+
+  <input
+    type="number"
+    className="border p-2 rounded w-28"
+    value={añoSeleccionado}
+    onChange={(e) =>
+      setAñoSeleccionado(Number(e.target.value))
+    }
+  />
+
+  <div className="bg-lime-200 px-4 py-2 rounded font-bold">
+    💰 € {ingresosFiltrados}
+  </div>
+
+</div>
 
   <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mb-4">
     <div className="bg-blue-100 p-3 rounded text-center">Recibidos: {recibidos}</div>
@@ -499,9 +536,6 @@ return ( <div className="p-4 max-w-7xl mx-auto">
     <div className="bg-green-100 p-3 rounded text-center">Finalizadas: {finalizadas}</div>
     <div className="bg-gray-200 p-3 rounded text-center">Total: {total}</div>
     <div className="bg-emerald-200 p-3 rounded text-center">€ {ingresos}</div>
-    <div className="bg-lime-200 p-3 rounded text-center">
-  Mes: € {ingresosMes}
-</div>
   </div>
 
   <div className="flex gap-2 mb-4">
