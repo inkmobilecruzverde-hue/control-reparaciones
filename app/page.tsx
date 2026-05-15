@@ -56,7 +56,7 @@ estado: "RECIBIDO",
 etiqueta: "",
 });
 const firmaRef = useRef<any>(null);
-const estados = ["RECIBIDO", "PENDIENTE", "ESPERA", "FINALIZADO", "ENTREGADO"];
+const estados = ["RECIBIDO", "EN REVISION", "ESPERANDO RECAMBIO", "ESPERANDO ACEPTACION", "FINALIZADO", "ENTREGADO"];
 const etiquetas = [
   "NORMAL",
   "URGENTE",
