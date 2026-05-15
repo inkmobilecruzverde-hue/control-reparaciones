@@ -109,17 +109,23 @@ id: docu.id,
 setOrdenes(datos);
 };
 
-useEffect(() => {
-cargarOrdenes();
-}, []);
-useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      router.push("/login");
-    } else {
-      setCheckingAuth(false);
-    }
-  });
+const cargarOrdenes = async () => {
+  const snapshot = await getDocs(
+    collection(db, "ordenes")
+  );
+
+  const datos = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Orden[];
+
+  datos.sort((a, b) =>
+    Number(b.fechaCreacion || 0) -
+    Number(a.fechaCreacion || 0)
+  );
+
+  setOrdenes(datos);
+};
 
   return () => {
     unsubscribe();
