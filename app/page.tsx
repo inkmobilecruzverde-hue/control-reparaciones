@@ -494,8 +494,7 @@ if (checkingAuth) {
     </div>
   );
 }
-return ( 
-<div className="p-4 max-w-7xl mx-auto">
+return ( <div className="p-4 max-w-7xl mx-auto">
 
 
   <h1 className="text-3xl font-bold mb-4">🛠️ Ink-Mobile</h1>
@@ -564,6 +563,8 @@ return (
 
 <div className="bg-emerald-200 p-3 rounded text-center">
   € {ingresos}
+</div>
+
 </div>
 
   <div className="flex gap-2 mb-4">
