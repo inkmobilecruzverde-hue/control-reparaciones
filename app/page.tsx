@@ -439,7 +439,7 @@ const espera = ordenes.filter(o => o.estado === "ESPERA").length;
 const finalizadas = ordenes.filter(o => o.estado === "FINALIZADO").length;
 
 const ingresos = ordenes
-.filter(o => o.estado === "FINALIZADO")
+.filter(o => o.estado === "ENTREGADO")
 .reduce((acc, o) => acc + Number(o.presupuesto || 0), 0);
 
 const filtradas = ordenes.filter((o) => {
