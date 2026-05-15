@@ -1,6 +1,7 @@
 "use client";
 
 import SignatureCanvas from "react-signature-canvas";
+import { Html5QrcodeScanner } from "html5-qrcode";
 import { useRef } from "react";
 import { useState, useEffect } from "react";
 import { db, auth } from "@/firebase/config";
@@ -61,6 +62,8 @@ estado: "RECIBIDO",
 etiqueta: "",
 });
 const firmaRef = useRef<any>(null);
+const [mostrarScanner, setMostrarScanner] =
+  useState(false);
 const estados = ["RECIBIDO", "EN REVISION", "ESPERANDO RECAMBIO", "ESPERANDO ACEPTACION", "FINALIZADO", "ENTREGADO"];
 const etiquetas = [
   "NORMAL",
@@ -318,7 +321,39 @@ await updateDoc(doc(db, "ordenes", id), datos as any);
   setOrdenSeleccionada(null);
   cargarOrdenes();
 };
+const iniciarScanner = () => {
 
+  setMostrarScanner(true);
+
+  setTimeout(() => {
+
+    const scanner = new Html5QrcodeScanner(
+      "reader",
+      {
+        fps: 10,
+        qrbox: 250,
+      },
+      false
+    );
+
+    scanner.render(
+      (texto) => {
+
+        setForm({
+          ...form,
+          serie: texto,
+        });
+
+        scanner.clear();
+
+        setMostrarScanner(false);
+
+      },
+      () => {}
+    );
+
+  }, 300);
+};
 const imprimirOrden = (orden: Orden) => {
 const ventana = window.open("", "_self");
 const fecha = new Date(orden.fecha);
@@ -535,8 +570,29 @@ if (checkingAuth) {
     </div>
   );
 }
-return ( <div className="p-4 max-w-7xl mx-auto">
 
+return (
+<>
+  {mostrarScanner && (
+    <div className="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center">
+
+      <div
+        id="reader"
+        className="w-full max-w-md bg-white p-2 rounded"
+      />
+
+      <button
+        onClick={() => setMostrarScanner(false)}
+        className="mt-4 bg-red-600 text-white px-6 py-2 rounded"
+      >
+        Cerrar
+      </button>
+
+    </div>
+  )}
+
+<div className="p-4 max-w-7xl mx-auto">
+      
 
   <h1 className="text-3xl font-bold mb-4">🛠️ Ink-Mobile</h1>
   <div className="flex gap-2 mb-4">
@@ -660,19 +716,33 @@ return ( <div className="p-4 max-w-7xl mx-auto">
   }
 />
     <input className="border p-2 w-full" placeholder="Problema" value={form.problema} onChange={(e) => setForm({ ...form, problema: e.target.value })} />
-    <input
-  type="tel"
-  inputMode="numeric"
-  className="border p-2 w-full"
-  placeholder="Código desbloqueo"
-  value={form.codigo}
-  onChange={(e) =>
-    setForm({
-      ...form,
-      codigo: e.target.value,
-    })
-  }
-/>
+ <div className="flex gap-2">
+
+  <input
+    type="tel"
+    inputMode="numeric"
+    autoCorrect="off"
+    spellCheck={false}
+    className="border p-2 w-full"
+    placeholder="Nº Serie / IMEI"
+    value={form.serie || ""}
+    onChange={(e) =>
+      setForm({
+        ...form,
+        serie: e.target.value,
+      })
+    }
+  />
+
+  <button
+    type="button"
+    onClick={iniciarScanner}
+    className="bg-black text-white px-4 rounded"
+  >
+    📷
+  </button>
+
+</div>
     <input className="border p-2 w-full" placeholder="Notas " value={form.notas} onChange={(e) => setForm({ ...form, notas: e.target.value })} />
     <input
   type="number"
@@ -957,7 +1027,6 @@ return ( <div className="p-4 max-w-7xl mx-auto">
   )}
 
 </div>
-
-
+</>
 );
 }
