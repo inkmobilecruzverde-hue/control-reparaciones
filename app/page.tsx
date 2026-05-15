@@ -101,14 +101,6 @@ const timestamp = Date.now().toString().slice(-6);
 return `${año}-${timestamp}`;
 };
 
-const snapshot = await getDocs(q);
-const datos: Orden[] = snapshot.docs.map((docu) => ({
-id: docu.id,
-...(docu.data() as Omit<Orden, "id">),
-}));
-setOrdenes(datos);
-};
-
 const cargarOrdenes = async () => {
   const snapshot = await getDocs(
     collection(db, "ordenes")
@@ -119,9 +111,10 @@ const cargarOrdenes = async () => {
     ...doc.data(),
   })) as Orden[];
 
-  datos.sort((a, b) =>
-    Number(b.fechaCreacion || 0) -
-    Number(a.fechaCreacion || 0)
+  datos.sort(
+    (a, b) =>
+      Number(b.fechaCreacion || 0) -
+      Number(a.fechaCreacion || 0)
   );
 
   setOrdenes(datos);
