@@ -100,12 +100,22 @@ return `${año}-${timestamp}`;
 };
 
 const cargarOrdenes = async () => {
-const snapshot = await getDocs(collection(db, "ordenes"));
-const datos: Orden[] = snapshot.docs.map((docu) => ({
-id: docu.id,
-...(docu.data() as Omit<Orden, "id">),
-}));
-setOrdenes(datos);
+  const snapshot = await getDocs(
+    collection(db, "ordenes")
+  );
+
+  const datos: Orden[] = snapshot.docs.map((docu) => ({
+    id: docu.id,
+    ...(docu.data() as Omit<Orden, "id">),
+  }));
+
+  datos.sort(
+    (a, b) =>
+      new Date(b.fecha || 0).getTime() -
+      new Date(a.fecha || 0).getTime()
+  );
+
+  setOrdenes(datos);
 };
 
 useEffect(() => {
@@ -721,15 +731,7 @@ return ( <div className="p-4 max-w-7xl mx-auto">
 <div className="border rounded p-2">
   <p className="text-sm mb-2 font-bold">Firma cliente</p>
 
-    <SignatureCanvas
-  ref={firmaRef}
-  penColor="black"
-  canvasProps={{
-    width: 450,
-    height: 150,
-    className: "border w-full bg-white",
-  }}
-/>
+    
 
 
   <button
