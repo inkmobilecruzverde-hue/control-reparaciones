@@ -440,10 +440,10 @@ ventana?.document.close();
 const total = ordenes.length;
 const recibidos = ordenes.filter(o => o.estado === "RECIBIDO").length;
 const enRevision = ordenes.filter(
-  (o) => o.estado === "EN REVISIÓN"
+  (o) => o.estado === "EN REVISION"
 ).length;
 const esperandoAceptacion = ordenes.filter(
-  (o) => o.estado === "ESPERANDO ACEPTACIÓN"
+  (o) => o.estado === "ESPERANDO ACEPTACION"
 ).length;
 const esperandoRecambio = ordenes.filter(
   (o) => o.estado === "ESPERANDO RECAMBIO"
