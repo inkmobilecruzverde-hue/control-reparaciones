@@ -102,10 +102,19 @@ return `${año}-${timestamp}`;
 };
 
 const cargarOrdenes = async () => {
-const q = query(
-  collection(db, "ordenes"),
-  orderBy("fechaCreacion", "desc")
-);
+  const snapshot = await getDocs(
+    collection(db, "ordenes")
+  );
+
+  const datos = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Orden[];
+
+  datos.sort((a, b) => b.numero - a.numero);
+
+  setOrdenes(datos);
+};
 
 const snapshot = await getDocs(q);
 const datos: Orden[] = snapshot.docs.map((docu) => ({
