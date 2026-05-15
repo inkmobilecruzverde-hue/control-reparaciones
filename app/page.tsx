@@ -13,8 +13,6 @@ getDocs,
 updateDoc,
 deleteDoc,
 doc,
-query,
-orderBy,
 } from "firebase/firestore";
 
 type Orden = {
@@ -102,23 +100,25 @@ return `${año}-${timestamp}`;
 };
 
 const cargarOrdenes = async () => {
-  const snapshot = await getDocs(
-    collection(db, "ordenes")
-  );
-
-  const datos = snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Orden[];
-
-  datos.sort(
-    (a, b) =>
-      Number(b.fechaCreacion || 0) -
-      Number(a.fechaCreacion || 0)
-  );
-
-  setOrdenes(datos);
+const snapshot = await getDocs(collection(db, "ordenes"));
+const datos: Orden[] = snapshot.docs.map((docu) => ({
+id: docu.id,
+...(docu.data() as Omit<Orden, "id">),
+}));
+setOrdenes(datos);
 };
+
+useEffect(() => {
+cargarOrdenes();
+}, []);
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      router.push("/login");
+    } else {
+      setCheckingAuth(false);
+    }
+  });
 
   return () => {
     unsubscribe();
@@ -133,7 +133,6 @@ await addDoc(collection(db, "ordenes"), {
   ...form,
   numero: generarNumero(),
   fecha: new Date().toISOString(),
-  fechaCreacion: Date.now(),
 });
 
 setForm({
