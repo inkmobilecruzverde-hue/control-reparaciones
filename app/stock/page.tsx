@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import { db } from "@/firebase/config";
 
 import {
-  collection,
-  addDoc,
-  getDocs,
+collection,
+addDoc,
+getDocs,
+deleteDoc,
+doc,
+updateDoc,
 } from "firebase/firestore";
 
 type Pieza = {
@@ -22,12 +25,17 @@ export default function StockPage() {
   const [piezas, setPiezas] =
     useState<Pieza[]>([]);
 
-  const [form, setForm] = useState({
-    nombre: "",
-    stock: "",
-    compra: "",
-    venta: "",
-  });
+  const [form, setForm] = useState<{
+  nombre: string;
+  stock: string;
+  compra: string;
+  venta: string;
+}>({
+  nombre: "",
+  stock: "",
+  compra: "",
+  venta: "",
+});
 
   const cargarPiezas = async () => {
 
@@ -70,7 +78,28 @@ export default function StockPage() {
 
     cargarPiezas();
   };
+const eliminarPieza = async (id: string) => {
 
+  await deleteDoc(doc(db, "stock", id));
+
+  cargarPiezas();
+};
+
+const actualizarStock = async (
+  id: string,
+  campo: string,
+  valor: number
+) => {
+
+  await updateDoc(
+    doc(db, "stock", id),
+    {
+      [campo]: valor,
+    }
+  );
+
+  cargarPiezas();
+};
   return (
     <div className="max-w-5xl mx-auto p-4">
 
