@@ -184,9 +184,39 @@ const actualizarStock = async (
                 {p.nombre}
               </p>
 
-              <p className="text-sm text-gray-600">
-                Stock: {p.stock}
-              </p>
+              <div className="flex items-center gap-2 mt-2">
+
+  <button
+    onClick={() =>
+      actualizarStock(
+        p.id!,
+        "stock",
+        p.stock - 1
+      )
+    }
+    className="bg-red-500 text-white px-2 rounded"
+  >
+    -
+  </button>
+
+  <span>
+    Stock: {p.stock}
+  </span>
+
+  <button
+    onClick={() =>
+      actualizarStock(
+        p.id!,
+        "stock",
+        p.stock + 1
+      )
+    }
+    className="bg-green-600 text-white px-2 rounded"
+  >
+    +
+  </button>
+
+</div>
 
             </div>
 
@@ -203,7 +233,14 @@ const actualizarStock = async (
               <p className="font-bold text-green-600">
                 Beneficio: {p.venta - p.compra} €
               </p>
-
+<button
+  onClick={() =>
+    eliminarPieza(p.id!)
+  }
+  className="bg-red-600 text-white px-3 py-1 rounded mt-2"
+>
+  ❌ Eliminar
+</button>
             </div>
 
           </div>
