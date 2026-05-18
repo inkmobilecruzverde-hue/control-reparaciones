@@ -1060,7 +1060,7 @@ return (
 <br/><br/>
 
 <button
-  onclick="window.history.back()"
+  onclick="window.location.href='/'"
   style="
     padding:12px 20px;
     font-size:18px;
