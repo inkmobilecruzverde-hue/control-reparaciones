@@ -780,8 +780,25 @@ return (
     </thead>
 
     <tbody>
-      {filtradas.map((o) => (
-        <tr key={o.id} className="border">
+      {filtradas.map((o) => {
+
+const dias =
+  Math.floor(
+    (Date.now() - new Date(o.fecha).getTime()) /
+    (1000 * 60 * 60 * 24)
+  );
+
+return (
+  <tr
+    key={o.id}
+    className={`border ${
+      dias > 30
+        ? "bg-red-100"
+        : dias > 15
+        ? "bg-yellow-100"
+        : ""
+    }`}
+  >
           <td>{o.nombre}</td>
           <td>{o.modelo}</td>
           <td>
@@ -824,7 +841,8 @@ return (
             <button onClick={() => eliminarOrden(o.id)}>❌</button>
           </td>
         </tr>
-      ))}
+      );
+})}
     </tbody>
   </table>
   <div className="md:hidden space-y-4 mt-4">
