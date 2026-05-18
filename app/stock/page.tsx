@@ -88,9 +88,9 @@ export default function StockPage() {
         />
 
         <input
-  type="number"
-  className="border p-2 w-full"
-  placeholder="Stock"
+          type="number"
+          className="border p-2 w-full"
+          placeholder="Stock"
           value={form.stock}
           onChange={(e) =>
             setForm({
@@ -101,9 +101,9 @@ export default function StockPage() {
         />
 
         <input
-  type="number"
-  className="border p-2 w-full"
-  placeholder="Precio compra (€)"
+          type="number"
+          className="border p-2 w-full"
+          placeholder="Precio compra (€)"
           value={form.compra}
           onChange={(e) =>
             setForm({
@@ -114,9 +114,9 @@ export default function StockPage() {
         />
 
         <input
-  type="number"
-  className="border p-2 w-full"
-  placeholder="Precio venta (€)"
+          type="number"
+          className="border p-2 w-full"
+          placeholder="Precio venta (€)"
           value={form.venta}
           onChange={(e) =>
             setForm({
