@@ -508,8 +508,11 @@ EL SERVICIO TIENE UN COSTE DE 1€ DIARIO A CONTAR PASADOS 30 DÍAS DE LA FECHA 
 
 <script>
   window.onload = () => {
-    window.print();
-  };
+  window.print();
+
+setTimeout(() => {
+  window.close();
+}, 1000);
 </script>
     </body>
   </html>
@@ -1052,7 +1055,7 @@ return (
         <br/>
 
         <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://TU-URL.vercel.app/consulta?telefono=${etiquetaSeleccionada.telefono}&orden=${etiquetaSeleccionada.numero}"
+          src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https:/https://ink-mobile-app-kbu6-6ild063f1-inkmobilecruzverde-6483s-projects.vercel.app//consulta?telefono=${etiquetaSeleccionada.telefono}&orden=${etiquetaSeleccionada.numero}"
         />
 
         <script>
