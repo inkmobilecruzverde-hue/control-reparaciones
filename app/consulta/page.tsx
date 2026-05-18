@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { db } from "@/firebase/config";
 import {
   collection,
@@ -17,7 +17,36 @@ export default function Consulta() {
 
   const [orden, setOrden] =
     useState<any>(null);
+  
+   useEffect(() => {
 
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const telefonoURL =
+    params.get("telefono");
+
+  const ordenURL =
+    params.get("orden");
+
+  if (
+    telefonoURL &&
+    ordenURL
+  ) {
+
+    setTelefono(telefonoURL);
+
+    setNumero(ordenURL);
+
+    setTimeout(() => {
+      buscarOrden();
+    }, 300);
+
+  }
+
+}, []);
   const buscarOrden = async () => {
 
     const snapshot = await getDocs(
