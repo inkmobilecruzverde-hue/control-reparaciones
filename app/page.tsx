@@ -550,9 +550,16 @@ const ingresosFiltrados = ordenes
     0
   );
 const filtradas = ordenes.filter((o) => {
+const textoBusqueda = busqueda.toLowerCase();
+
 const coincideBusqueda =
-o.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
-o.modelo?.toLowerCase().includes(busqueda.toLowerCase());
+  o.nombre?.toLowerCase().includes(textoBusqueda) ||
+  o.modelo?.toLowerCase().includes(textoBusqueda) ||
+  o.telefono?.toLowerCase().includes(textoBusqueda) ||
+  o.dni?.toLowerCase().includes(textoBusqueda) ||
+  o.serie?.toLowerCase().includes(textoBusqueda) ||
+  o.problema?.toLowerCase().includes(textoBusqueda) ||
+  o.notas?.toLowerCase().includes(textoBusqueda);
 
 
 const coincideEstado =
