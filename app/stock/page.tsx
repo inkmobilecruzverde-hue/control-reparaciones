@@ -263,6 +263,32 @@ const actualizarStock = async (
 >
   ❌ Eliminar
 </button>
+
+<button
+  onClick={() => {
+
+    const nuevoNombre =
+      prompt(
+        "Nuevo nombre",
+        p.nombre
+      );
+
+    if (!nuevoNombre) return;
+
+    updateDoc(
+      doc(db, "stock", p.id!),
+      {
+        nombre: nuevoNombre,
+      }
+    );
+
+    cargarPiezas();
+
+  }}
+  className="bg-blue-600 text-white px-3 py-1 rounded mt-2 ml-2"
+>
+  ✏ Editar
+</button>
             </div>
 
           </div>
