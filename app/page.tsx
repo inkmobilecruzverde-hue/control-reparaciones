@@ -41,6 +41,8 @@ piezas?: string[];
 export default function Home() {
 const [ordenes, setOrdenes] = useState<Orden[]>([]);
 const [stock, setStock] = useState<any[]>([]);
+const [buscarPieza, setBuscarPieza] =
+  useState("");
 const [busqueda, setBusqueda] = useState("");
 const [filtroEstado, setFiltroEstado] = useState("TODOS");
 const [ordenSeleccionada, setOrdenSeleccionada] = useState<Orden | null>(null);
@@ -1274,8 +1276,26 @@ if (button) {
   <p className="font-bold mb-2">
     🧩 Piezas usadas
   </p>
-
-  {stock.map((p) => (
+<input
+  className="border p-2 w-full mb-2"
+  placeholder="🔍 Buscar pieza..."
+  value={buscarPieza}
+  onChange={(e) =>
+    setBuscarPieza(
+      e.target.value
+    )
+  }
+/>
+  {stock
+  .filter((p) =>
+    p.nombre
+      .toLowerCase()
+      .includes(
+        buscarPieza.toLowerCase()
+      )
+  )
+  .slice(0, 8)
+  .map((p) => (
 
     <button
       key={p.id}
