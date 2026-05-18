@@ -1286,16 +1286,18 @@ if (button) {
     )
   }
 />
-  {stock
-  .filter((p) =>
-    p.nombre
-      .toLowerCase()
-      .includes(
-        buscarPieza.toLowerCase()
-      )
-  )
-  .slice(0, 8)
-  .map((p) => (
+  {buscarPieza.length > 1 &&
+
+  stock
+    .filter((p) =>
+      p.nombre
+        .toLowerCase()
+        .includes(
+          buscarPieza.toLowerCase()
+        )
+    )
+    .slice(0, 8)
+    .map((p) => (
 
     <button
       key={p.id}
