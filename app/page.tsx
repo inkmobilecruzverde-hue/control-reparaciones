@@ -923,37 +923,44 @@ return (
       <div className="grid grid-cols-3 gap-2 pt-2">
         <button
           onClick={() => setOrdenSeleccionada(o)}
-          className="bg-blue-600 active:scale-95 text-white py-3 rounded-xl text-sm"
+          className="bg-blue-600 active:scale-95 text-white py-3 rounded-xl text-base"
         >
           👁️
         </button>
 
         <button
+  onClick={() => setEtiquetaSeleccionada(o)}
+  className="bg-black active:scale-95 text-white py-2 rounded-lg text-base"
+>
+  🏷️
+</button>
+
+        <button
           onClick={() =>
             enviarWhatsApp(o)
           }
-          className="bg-green-600 active:scale-95 text-white py-3 rounded-xl text-sm"
+          className="bg-green-600 active:scale-95 text-white py-3 rounded-xl text-base"
         >
           📲
         </button>
 
         <button
           onClick={() => compartirOrden(o)}
-          className="bg-indigo-600 active:scale-95 text-white py-3 rounded-xl text-sm"
+          className="bg-indigo-600 active:scale-95 text-white py-3 rounded-xl text-base"
         >
           📤
         </button>
 
         <button
           onClick={() => imprimirOrden(o)}
-          className="bg-gray-800 active:scale-95 text-white py-3 rounded-xl text-sm"
+          className="bg-gray-800 active:scale-95 text-white py-3 rounded-xl text-base"
         >
           🧾
         </button>
 
         <button
           onClick={() => eliminarOrden(o.id)}
-          className="bg-red-600 active:scale-95 text-white py-3 rounded-xl text-sm"
+          className="bg-red-600 active:scale-95 text-white py-3 rounded-xl text-base"
         >
           ❌
         </button>
