@@ -62,6 +62,7 @@ presupuesto: "",
 coste: "",
 estado: "RECIBIDO",
 etiqueta: "",
+tecnico: "Rubén",
 });
 const firmaRef = useRef<any>(null);
 const [mostrarScanner, setMostrarScanner] =
@@ -170,6 +171,7 @@ setForm({
   coste: "",
   estado: "RECIBIDO",
   etiqueta: "",
+  
 });
 
 cargarOrdenes();
@@ -1191,6 +1193,22 @@ if (button) {
         <input className="border p-2 w-full" value={ordenSeleccionada.presupuesto || ""} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, presupuesto: e.target.value })} />
         <input className="border p-2 w-full" value={ordenSeleccionada.notas || ""} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, notas: e.target.value })} />
         <select className="border p-2 w-full" value={ordenSeleccionada.estado} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, estado: e.target.value })}>
+          <select
+  className="border p-2 w-full"
+  value={form.tecnico || "Rubén"}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      tecnico: e.target.value,
+    })
+  }
+>
+
+  <option>Rubén</option>
+  <option>Alpha Electrónica</option>
+  <option>Iván</option>
+
+</select>
           {estados.map(e => <option key={e}>{e}</option>)}
         </select>
       {ordenSeleccionada.fechaEntrega && (
