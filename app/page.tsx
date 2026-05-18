@@ -920,10 +920,10 @@ return (
         ))}
       </select>
 
-      <div className="grid grid-cols-5 gap-2 pt-2">
+      <div className="grid grid-cols-3 gap-2 pt-2">
         <button
           onClick={() => setOrdenSeleccionada(o)}
-          className="bg-blue-600 active:scale-95 text-white py-3 rounded-xl text-lg"
+          className="bg-blue-600 active:scale-95 text-white py-3 rounded-xl text-sm"
         >
           👁️
         </button>
@@ -932,28 +932,28 @@ return (
           onClick={() =>
             enviarWhatsApp(o)
           }
-          className="bg-green-600 active:scale-95 text-white py-3 rounded-xl text-lg"
+          className="bg-green-600 active:scale-95 text-white py-3 rounded-xl text-sm"
         >
           📲
         </button>
 
         <button
           onClick={() => compartirOrden(o)}
-          className="bg-indigo-600 active:scale-95 text-white py-3 rounded-xl text-lg"
+          className="bg-indigo-600 active:scale-95 text-white py-3 rounded-xl text-sm"
         >
           📤
         </button>
 
         <button
           onClick={() => imprimirOrden(o)}
-          className="bg-gray-800 active:scale-95 text-white py-3 rounded-xl text-lg"
+          className="bg-gray-800 active:scale-95 text-white py-3 rounded-xl text-sm"
         >
           🧾
         </button>
 
         <button
           onClick={() => eliminarOrden(o.id)}
-          className="bg-red-600 active:scale-95 text-white py-3 rounded-xl text-lg"
+          className="bg-red-600 active:scale-95 text-white py-3 rounded-xl text-sm"
         >
           ❌
         </button>
