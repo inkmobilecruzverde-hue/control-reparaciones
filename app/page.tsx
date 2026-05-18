@@ -1022,6 +1022,13 @@ return (
 
   ventana.document.write(`
     <html>
+    <style>
+@media print {
+  button {
+    display: none !important;
+  }
+}
+</style>
       <body
         style="
           font-family: Arial;
@@ -1074,7 +1081,17 @@ return (
 </button>
         <script>
           window.onload = () => {
-            window.print();
+            const button = document.getElementById("volverBtn");
+
+if (button) {
+  button.style.display = "none";
+}
+
+window.print();
+
+if (button) {
+  button.style.display = "block";
+}
           };
         </script>
 
