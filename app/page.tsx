@@ -333,7 +333,43 @@ const datosActualizados = {
 };
 
 const { id, ...datos } = datosActualizados;
+const ordenOriginal = ordenes.find(
+  (o) => o.id === id
+);
 
+const piezasAntes =
+  ordenOriginal?.piezas || [];
+
+const piezasAhora =
+  ordenSeleccionada.piezas || [];
+
+const nuevasPiezas =
+  piezasAhora.filter(
+    (p) => !piezasAntes.includes(p)
+  );
+
+for (const nombrePieza of nuevasPiezas) {
+
+  const piezaStock = stock.find(
+    (p) => p.nombre === nombrePieza
+  );
+
+  if (
+    piezaStock &&
+    piezaStock.stock > 0
+  ) {
+
+    await updateDoc(
+      doc(db, "stock", piezaStock.id),
+      {
+        stock:
+          piezaStock.stock - 1,
+      }
+    );
+
+  }
+
+}
 await updateDoc(doc(db, "ordenes", id), datos as any);
 
   setOrdenSeleccionada(null);
