@@ -222,6 +222,8 @@ IMEI/Nº Serie:
 ${orden.serie || "-"}
 
 Tu orden ya ha sido registrada correctamente.
+🔎 Consulta el estado aquí:
+https://https://ink-mobile-app-kbu6-bpf46a46j-inkmobilecruzverde-6483s-projects.vercel.app//consulta?telefono=${orden.telefono}&orden=${orden.numero}
 
 🛠️ Ink-Mobile`;
 }
