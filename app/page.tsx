@@ -238,7 +238,7 @@ ${orden.serie || "-"}
 
 Tu orden ya ha sido registrada correctamente.
 🔎 Consulta el estado aquí:
-https://https://ink-mobile-app-kbu6-bpf46a46j-inkmobilecruzverde-6483s-projects.vercel.app//consulta?telefono=${orden.telefono}&orden=${orden.numero}
+https://ink-mobile-app-kbu6.vercel.app/consulta?telefono=${orden.telefono}&orden=${orden.numero}
 
 🛠️ Ink-Mobile`;
 }
@@ -1074,7 +1074,7 @@ return (
 
       <div className="flex justify-center my-4">
         <QRCodeCanvas
-          value={`https://TU-URL.vercel.app/consulta?telefono=${etiquetaSeleccionada.telefono}&orden=${etiquetaSeleccionada.numero}`}
+          value={`https://ink-mobile-app-kbu6.vercel.app/consulta?telefono=${etiquetaSeleccionada.telefono}&orden=${etiquetaSeleccionada.numero}`}
           size={120}
         />
       </div>
