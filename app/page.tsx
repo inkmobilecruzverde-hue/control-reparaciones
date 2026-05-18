@@ -896,7 +896,21 @@ return (
   {filtradas.map((o) => (
     <div
       key={o.id}
-      className="bg-white rounded-xl shadow p-4 border space-y-3"
+      className={`rounded-xl shadow p-4 border space-y-3 ${
+  Math.floor(
+    (Date.now() -
+      new Date(o.fecha).getTime()) /
+      (1000 * 60 * 60 * 24)
+  ) > 30
+    ? "bg-red-100"
+    : Math.floor(
+        (Date.now() -
+          new Date(o.fecha).getTime()) /
+          (1000 * 60 * 60 * 24)
+      ) > 15
+    ? "bg-yellow-100"
+    : "bg-white"
+}`}
     >
       <div>
         <p className="text-lg font-bold">{o.nombre}</p>
