@@ -34,6 +34,7 @@ fecha?: any;
 firma?: string | null;
 fechaEntrega?: any;
 etiqueta?: string;
+tecnico?: string;
 };
 
 export default function Home() {
@@ -77,15 +78,7 @@ const etiquetas = [
   "ESPERANDO PIEZA",
   "SIN ARREGLO",
 ];
-<SignatureCanvas
-  ref={firmaRef}
-  penColor="black"
-  canvasProps={{
-    width: 450,
-    height: 150,
-    className: "border w-full bg-white",
-  }}
-/>
+
 
 // 🔒 ESC + bloqueo scroll
 useEffect(() => {
@@ -171,6 +164,7 @@ setForm({
   coste: "",
   estado: "RECIBIDO",
   etiqueta: "",
+  tecnico: "Rubén",
   
 });
 
@@ -917,6 +911,9 @@ return (
       <div>
         <p className="text-lg font-bold">{o.nombre}</p>
         <p className="text-sm text-gray-500">{o.modelo}</p>
+        <p className="text-xs text-blue-600 font-bold">
+  👨‍🔧 {o.tecnico || "Rubén"}
+</p>
       </div>
 
       <div className="flex justify-between text-sm">
@@ -1193,24 +1190,22 @@ if (button) {
         <input className="border p-2 w-full" value={ordenSeleccionada.presupuesto || ""} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, presupuesto: e.target.value })} />
         <input className="border p-2 w-full" value={ordenSeleccionada.notas || ""} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, notas: e.target.value })} />
         <select className="border p-2 w-full" value={ordenSeleccionada.estado} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, estado: e.target.value })}>
-          <select
+          {estados.map(e => <option key={e}>{e}</option>)}
+        </select>
+    <select
   className="border p-2 w-full"
-  value={form.tecnico || "Rubén"}
+  value={ordenSeleccionada.tecnico || "Rubén"}
   onChange={(e) =>
-    setForm({
-      ...form,
+    setOrdenSeleccionada({
+      ...ordenSeleccionada,
       tecnico: e.target.value,
     })
   }
 >
-
   <option>Rubén</option>
   <option>Alpha Electrónica</option>
   <option>Iván</option>
-
 </select>
-          {estados.map(e => <option key={e}>{e}</option>)}
-        </select>
       {ordenSeleccionada.fechaEntrega && (
   <div className="bg-green-100 p-2 rounded text-sm">
     📦 Entregado el:
