@@ -700,21 +700,6 @@ return (
   }
 />
     <input className="border p-2 w-full" placeholder="Modelo" value={form.modelo} onChange={(e) => setForm({ ...form, modelo: e.target.value })} />
-    <input
-  type="tel"
-  inputMode="numeric"
-  autoCorrect="off"
-  spellCheck={false}
-  className="border p-2 w-full"
-  placeholder="Nº Serie / IMEI"
-  value={form.serie || ""}
-  onChange={(e) =>
-    setForm({
-      ...form,
-      serie: e.target.value,
-    })
-  }
-/>
     <input className="border p-2 w-full" placeholder="Problema" value={form.problema} onChange={(e) => setForm({ ...form, problema: e.target.value })} />
  <div className="flex gap-2">
 
