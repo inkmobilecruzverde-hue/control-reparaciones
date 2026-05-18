@@ -35,10 +35,12 @@ firma?: string | null;
 fechaEntrega?: any;
 etiqueta?: string;
 tecnico?: string;
+piezas?: string[];
 };
 
 export default function Home() {
 const [ordenes, setOrdenes] = useState<Orden[]>([]);
+const [stock, setStock] = useState<any[]>([]);
 const [busqueda, setBusqueda] = useState("");
 const [filtroEstado, setFiltroEstado] = useState("TODOS");
 const [ordenSeleccionada, setOrdenSeleccionada] = useState<Orden | null>(null);
@@ -123,9 +125,22 @@ const cargarOrdenes = async () => {
 
   setOrdenes(datos);
 };
+const cargarStock = async () => {
 
+  const snapshot = await getDocs(
+    collection(db, "stock")
+  );
+
+  const datos = snapshot.docs.map((d) => ({
+    id: d.id,
+    ...(d.data() as any),
+  }));
+
+  setStock(datos);
+};
 useEffect(() => {
-cargarOrdenes();
+  cargarOrdenes();
+  cargarStock();
 }, []);
 useEffect(() => {
   const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -1218,7 +1233,79 @@ if (button) {
     </b>
   </div>
 )}
+<div className="border rounded p-2">
 
+  <p className="font-bold mb-2">
+    🧩 Piezas usadas
+  </p>
+
+  {stock.map((p) => (
+
+    <button
+      key={p.id}
+      type="button"
+      onClick={() => {
+
+        const actuales =
+          ordenSeleccionada.piezas || [];
+
+        if (
+          actuales.includes(p.nombre)
+        ) return;
+
+        setOrdenSeleccionada({
+          ...ordenSeleccionada,
+          piezas: [
+            ...actuales,
+            p.nombre,
+          ],
+        });
+      }}
+      className="bg-gray-200 px-2 py-1 rounded text-sm mr-2 mb-2"
+    >
+      {p.nombre}
+    </button>
+
+  ))}
+
+  <div className="mt-2 space-y-1">
+
+    {ordenSeleccionada.piezas?.map(
+      (pieza, index) => (
+
+        <div
+          key={index}
+          className="bg-blue-100 px-2 py-1 rounded flex justify-between items-center"
+        >
+
+          <span>{pieza}</span>
+
+          <button
+            type="button"
+            onClick={() => {
+
+              setOrdenSeleccionada({
+                ...ordenSeleccionada,
+                piezas:
+                  ordenSeleccionada.piezas?.filter(
+                    (p) => p !== pieza
+                  ),
+              });
+
+            }}
+            className="text-red-600"
+          >
+            ✖
+          </button>
+
+        </div>
+
+      )
+    )}
+
+  </div>
+
+</div>
 <div className="border rounded p-2">
   <p className="text-sm mb-2 font-bold">Firma cliente</p>
 

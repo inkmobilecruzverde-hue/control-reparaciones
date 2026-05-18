@@ -205,11 +205,7 @@ const actualizarStock = async (
   </div>
 )}
 
-{p.stock > 0 && p.stock <= 2 && (
-  <div className="bg-yellow-400 text-black text-xs px-2 py-1 rounded mt-1 inline-block">
-    ⚠️ STOCK BAJO
-  </div>
-)}
+
               <div className="flex items-center gap-2 mt-2">
 
   <button
