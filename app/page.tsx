@@ -1,5 +1,5 @@
 "use client";
-
+import { QRCodeCanvas } from "qrcode.react";
 import SignatureCanvas from "react-signature-canvas";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { useRef } from "react";
@@ -66,6 +66,8 @@ etiqueta: "",
 const firmaRef = useRef<any>(null);
 const [mostrarScanner, setMostrarScanner] =
   useState(false);
+  const [etiquetaSeleccionada, setEtiquetaSeleccionada] =
+  useState<Orden | null>(null);
 const estados = ["RECIBIDO", "EN REVISION", "ESPERANDO RECAMBIO", "ESPERANDO ACEPTACION", "FINALIZADO", "ENTREGADO"];
 const etiquetas = [
   "NORMAL",
@@ -874,6 +876,11 @@ return (
           <td className="space-x-2">
             <button onClick={() => setOrdenSeleccionada(o)}>👁️</button>
             <button onClick={() => enviarWhatsApp(o)}>📲</button>
+            <button
+  onClick={() => setEtiquetaSeleccionada(o)}
+>
+  🏷️
+</button>
             <button onClick={() => imprimirOrden(o)}>🧾</button>
             <button onClick={() => eliminarOrden(o.id)}>❌</button>
           </td>
@@ -954,7 +961,58 @@ return (
     </div>
   ))}
 </div>
+{etiquetaSeleccionada && (
+  <div
+    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    onClick={() => setEtiquetaSeleccionada(null)}
+  >
+    <div
+      className="bg-white p-4 rounded text-center w-72"
+      onClick={(e) => e.stopPropagation()}
+    >
 
+      <h2 className="font-bold text-lg">
+        🏷️ Ink-Mobile
+      </h2>
+
+      <p className="mt-2">
+        <b>Orden:</b><br />
+        {etiquetaSeleccionada.numero}
+      </p>
+
+      <p className="mt-2">
+        <b>Cliente:</b><br />
+        {etiquetaSeleccionada.nombre}
+      </p>
+
+      <p className="mt-2">
+        <b>Modelo:</b><br />
+        {etiquetaSeleccionada.modelo}
+      </p>
+
+      <p className="mt-2 text-xs">
+        IMEI:
+        <br />
+        {etiquetaSeleccionada.serie || "-"}
+      </p>
+
+      <div className="flex justify-center my-4">
+        <QRCodeCanvas
+          value={`https://TU-URL.vercel.app/consulta?telefono=${etiquetaSeleccionada.telefono}&orden=${etiquetaSeleccionada.numero}`}
+          size={120}
+        />
+      </div>
+
+      <button
+        onClick={() => window.print()}
+        className="bg-black text-white px-4 py-2 rounded"
+      >
+        🖨️ Imprimir
+      </button>
+
+    </div>
+  </div>
+)}
   {/* MODAL PRO++ */}
   {ordenSeleccionada && (
     <div
