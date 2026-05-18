@@ -1057,7 +1057,21 @@ return (
         <img
           src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https:/https://ink-mobile-app-kbu6-6ild063f1-inkmobilecruzverde-6483s-projects.vercel.app//consulta?telefono=${etiquetaSeleccionada.telefono}&orden=${etiquetaSeleccionada.numero}"
         />
+<br/><br/>
 
+<button
+  onclick="window.history.back()"
+  style="
+    padding:12px 20px;
+    font-size:18px;
+    border:none;
+    border-radius:10px;
+    background:black;
+    color:white;
+  "
+>
+  ⬅ Volver
+</button>
         <script>
           window.onload = () => {
             window.print();
