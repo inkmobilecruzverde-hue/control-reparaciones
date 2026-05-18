@@ -1011,7 +1011,63 @@ return (
       </div>
 
       <button
-        onClick={() => window.print()}
+        onClick={() => {
+
+  const ventana = window.open("", "_blank");
+
+  if (!ventana) return;
+
+  ventana.document.write(`
+    <html>
+      <body
+        style="
+          font-family: Arial;
+          text-align:center;
+          padding:20px;
+        "
+      >
+
+        <h2>🛠️ Ink-Mobile</h2>
+
+        <p>
+          <b>Orden:</b><br/>
+          ${etiquetaSeleccionada.numero}
+        </p>
+
+        <p>
+          <b>Cliente:</b><br/>
+          ${etiquetaSeleccionada.nombre}
+        </p>
+
+        <p>
+          <b>Modelo:</b><br/>
+          ${etiquetaSeleccionada.modelo}
+        </p>
+
+        <p>
+          <b>IMEI:</b><br/>
+          ${etiquetaSeleccionada.serie || "-"}
+        </p>
+
+        <br/>
+
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://TU-URL.vercel.app/consulta?telefono=${etiquetaSeleccionada.telefono}&orden=${etiquetaSeleccionada.numero}"
+        />
+
+        <script>
+          window.onload = () => {
+            window.print();
+          };
+        </script>
+
+      </body>
+    </html>
+  `);
+
+  ventana.document.close();
+
+}}
         className="bg-black text-white px-4 py-2 rounded"
       >
         🖨️ Imprimir
