@@ -24,9 +24,9 @@ export default function StockPage() {
 
   const [form, setForm] = useState({
     nombre: "",
-    stock: 0,
-    compra: 0,
-    venta: 0,
+    stock: "",
+    compra: "",
+    venta: "",
   });
 
   const cargarPiezas = async () => {
@@ -52,15 +52,20 @@ export default function StockPage() {
     if (!form.nombre) return;
 
     await addDoc(
-      collection(db, "stock"),
-      form
-    );
+  collection(db, "stock"),
+  {
+    nombre: form.nombre,
+    stock: Number(form.stock),
+    compra: Number(form.compra),
+    venta: Number(form.venta),
+  }
+);
 
     setForm({
       nombre: "",
-      stock: 0,
-      compra: 0,
-      venta: 0,
+      stock: "",
+      compra: "",
+      venta: "",
     });
 
     cargarPiezas();
@@ -95,7 +100,7 @@ export default function StockPage() {
           onChange={(e) =>
             setForm({
               ...form,
-              stock: Number(e.target.value),
+              stock: (e.target.value),
             })
           }
         />
@@ -108,7 +113,7 @@ export default function StockPage() {
           onChange={(e) =>
             setForm({
               ...form,
-              compra: Number(e.target.value),
+              compra: (e.target.value),
             })
           }
         />
@@ -121,7 +126,7 @@ export default function StockPage() {
           onChange={(e) =>
             setForm({
               ...form,
-              venta: Number(e.target.value),
+              venta: (e.target.value),
             })
           }
         />
