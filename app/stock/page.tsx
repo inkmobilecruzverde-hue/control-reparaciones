@@ -24,7 +24,8 @@ export default function StockPage() {
 
   const [piezas, setPiezas] =
     useState<Pieza[]>([]);
-
+  const [busqueda, setBusqueda] =
+  useState("");
   const [form, setForm] = useState<{
   nombre: string;
   stock: string;
@@ -168,10 +169,25 @@ const actualizarStock = async (
         </button>
 
       </div>
-
+<input
+  className="border p-2 w-full mb-4"
+  placeholder="🔍 Buscar pieza..."
+  value={busqueda}
+  onChange={(e) =>
+    setBusqueda(e.target.value)
+  }
+/>
       <div className="space-y-3">
 
-        {piezas.map((p) => (
+        {piezas
+  .filter((p) =>
+    p.nombre
+      .toLowerCase()
+      .includes(
+        busqueda.toLowerCase()
+      )
+  )
+  .map((p) => (
 
           <div
             key={p.id}
@@ -183,7 +199,17 @@ const actualizarStock = async (
               <p className="font-bold">
                 {p.nombre}
               </p>
+{p.stock <= 0 && (
+  <div className="bg-red-600 text-white text-xs px-2 py-1 rounded mt-1 inline-block">
+    ❌ SIN STOCK
+  </div>
+)}
 
+{p.stock > 0 && p.stock <= 2 && (
+  <div className="bg-yellow-400 text-black text-xs px-2 py-1 rounded mt-1 inline-block">
+    ⚠️ STOCK BAJO
+  </div>
+)}
               <div className="flex items-center gap-2 mt-2">
 
   <button
