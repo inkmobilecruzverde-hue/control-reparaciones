@@ -28,6 +28,7 @@ problema: string;
 codigo?: string;
 notas?: string;
 presupuesto?: string;
+coste?: string;
 estado: string;
 fecha?: any;
 firma?: string | null;
@@ -58,6 +59,7 @@ problema: "",
 codigo: "",
 notas: "",
 presupuesto: "",
+coste: "",
 estado: "RECIBIDO",
 etiqueta: "",
 });
@@ -163,6 +165,7 @@ setForm({
   codigo: "",
   notas: "",
   presupuesto: "",
+  coste: "",
   estado: "RECIBIDO",
   etiqueta: "",
 });
@@ -527,8 +530,24 @@ const esperandoRecambio = ordenes.filter(
 const finalizadas = ordenes.filter(o => o.estado === "FINALIZADO").length;
 
 const ingresos = ordenes
-.filter(o => o.estado === "ENTREGADO")
-.reduce((acc, o) => acc + Number(o.presupuesto || 0), 0);
+  .filter((o) => o.estado === "ENTREGADO")
+  .reduce(
+    (acc, o) =>
+      acc + Number(o.presupuesto || 0),
+    0
+  );
+
+const beneficioReal = ordenes
+  .filter((o) => o.estado === "ENTREGADO")
+  .reduce(
+    (acc, o) =>
+      acc +
+      (
+        Number(o.presupuesto || 0) -
+        Number(o.coste || 0)
+      ),
+    0
+  );
 const ingresosFiltrados = ordenes
   .filter((o) => {
     if (
@@ -665,6 +684,10 @@ return (
   Total: {total}
 </div>
 
+<div className="bg-emerald-200 p-3 rounded text-center font-bold">
+  Beneficio: € {beneficioReal}
+</div>
+
 <div className="bg-emerald-200 p-3 rounded text-center">
   € {ingresos}
 </div>
@@ -749,7 +772,19 @@ return (
     })
   }
 />
-
+<input
+  type="number"
+  inputMode="decimal"
+  className="border p-2 w-full"
+  placeholder="Coste pieza (€)"
+  value={form.coste || ""}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      coste: e.target.value,
+    })
+  }
+/>
     <select className="border p-2 w-full" value={form.estado} onChange={(e) => setForm({ ...form, estado: e.target.value })}>
       {estados.map(e => <option key={e}>{e}</option>)}
     </select>
