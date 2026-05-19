@@ -42,7 +42,13 @@ export default function StockPage() {
 ];
 
   const [piezas, setPiezas] =
+  
     useState<Pieza[]>([]);
+    const [filtroStock, setFiltroStock] =
+  useState("Todos");
+
+const [filtroCategoria, setFiltroCategoria] =
+  useState("Todas");
   const [busqueda, setBusqueda] =
   useState("");
   const [form, setForm] = useState<{
@@ -212,21 +218,78 @@ const actualizarStock = async (
 <input
   className="border p-2 w-full mb-4"
   placeholder="🔍 Buscar pieza..."
+  
   value={busqueda}
   onChange={(e) =>
     setBusqueda(e.target.value)
   }
 />
+<div className="flex gap-2 mb-4">
+
+  <select
+    className="border p-2 rounded"
+    value={filtroStock}
+    onChange={(e) =>
+      setFiltroStock(e.target.value)
+    }
+  >
+    <option>Todos</option>
+    <option>Sin stock</option>
+    <option>Con stock</option>
+  </select>
+
+  <select
+    className="border p-2 rounded"
+    value={filtroCategoria}
+    onChange={(e) =>
+      setFiltroCategoria(e.target.value)
+    }
+  >
+    <option>Todas</option>
+
+    {categorias.map((c) => (
+      <option key={c}>
+        {c}
+      </option>
+    ))}
+
+  </select>
+
+</div>
       <div className="space-y-3">
 
         {piezas
-  .filter((p) =>
+  .filter((p) => {
+
+  const coincideBusqueda =
     p.nombre
       .toLowerCase()
       .includes(
         busqueda.toLowerCase()
-      )
-  )
+      );
+
+  const coincideStock =
+    filtroStock === "Todos"
+    || (
+      filtroStock === "Sin stock"
+      && p.stock <= 0
+    )
+    || (
+      filtroStock === "Con stock"
+      && p.stock > 0
+    );
+
+  const coincideCategoria =
+    filtroCategoria === "Todas"
+    || p.categoria === filtroCategoria;
+
+  return (
+    coincideBusqueda &&
+    coincideStock &&
+    coincideCategoria
+  );
+
+})
   .map((p) => (
 
           <div
