@@ -185,6 +185,110 @@ const actualizarStock = async (
       <h1 className="text-3xl font-bold mb-4">
         📦 Stock / Recambios
       </h1>
+      <button
+  onClick={() => {
+
+    const headers = [
+      "nombre",
+      "marca",
+      "categoria",
+      "stock",
+      "compra",
+      "venta",
+    ];
+
+    const filas = piezas.map((p) => [
+      p.nombre,
+      p.marca,
+      p.categoria,
+      p.stock,
+      p.compra,
+      p.venta,
+    ]);
+
+    const csv = [
+      headers.join(","),
+      ...filas.map((f) => f.join(",")),
+    ].join("\n");
+
+    const blob = new Blob(
+      [csv],
+      { type: "text/csv" }
+    );
+
+    const url =
+      URL.createObjectURL(blob);
+
+    const a =
+      document.createElement("a");
+
+    a.href = url;
+
+    a.download = "stock.csv";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+  }}
+
+  className="bg-green-600 text-white px-4 py-2 rounded mb-4"
+>
+  📥 Exportar stock CSV
+</button>
+<input
+  type="file"
+  accept=".csv"
+  className="mb-4 ml-2"
+  onChange={async (e) => {
+
+    const file =
+      e.target.files?.[0];
+
+    if (!file) return;
+
+    const text =
+      await file.text();
+
+    const rows =
+      text.split("\n");
+
+    const datos =
+      rows.slice(1);
+
+    for (const row of datos) {
+
+      if (!row.trim()) continue;
+
+      const [
+        nombre,
+        marca,
+        categoria,
+        stock,
+        compra,
+        venta,
+      ] = row.split(",");
+
+      await addDoc(
+        collection(db, "stock"),
+        {
+          nombre,
+          marca,
+          categoria,
+          stock: Number(stock),
+          compra: Number(compra),
+          venta: Number(venta),
+        }
+      );
+
+    }
+
+    cargarPiezas();
+
+    alert("Stock importado");
+
+  }}
+/>
 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
 
   <div className="bg-green-100 p-4 rounded shadow">
