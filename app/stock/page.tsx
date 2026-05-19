@@ -16,6 +16,7 @@ type Pieza = {
   id?: string;
   nombre: string;
   categoria: string;
+  marca: string;
   stock: number;
   compra: number;
   venta: number;
@@ -40,7 +41,20 @@ export default function StockPage() {
   "Huella",
   "Otros",
 ];
-
+  const marcas = [
+  "Apple",
+  "Samsung",
+  "Xiaomi",
+  "Huawei",
+  "Oppo",
+  "Realme",
+  "Motorola",
+  "Vivo",
+  "Honor",
+  "Nokia",
+  "LG",
+  "Otros",
+];
   const [piezas, setPiezas] =
   
     useState<Pieza[]>([]);
@@ -54,12 +68,14 @@ const [filtroCategoria, setFiltroCategoria] =
   const [form, setForm] = useState<{
   nombre: string;
   categoria: string;
+  marca: string;
   stock: string;
   compra: string;
   venta: string;
 }>({
   nombre: "",
   categoria: "Pantallas",
+  marca: "Apple",
   stock: "",
   compra: "",
   venta: "",
@@ -92,6 +108,7 @@ const [filtroCategoria, setFiltroCategoria] =
   {
     nombre: form.nombre,
     categoria: form.categoria,
+    marca: form.marca,
     stock: Number(form.stock),
     compra: Number(form.compra),
     venta: Number(form.venta),
@@ -101,6 +118,7 @@ const [filtroCategoria, setFiltroCategoria] =
     setForm({
       nombre: "",
       categoria: "Pantallas",
+      marca: "Apple",
       stock: "",
       compra: "",
       venta: "",
@@ -164,6 +182,24 @@ const actualizarStock = async (
   {categorias.map((c) => (
     <option key={c}>
       {c}
+    </option>
+  ))}
+
+</select>
+<select
+  className="border p-2 w-full"
+  value={form.marca}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      marca: e.target.value,
+    })
+  }
+>
+
+  {marcas.map((m) => (
+    <option key={m}>
+      {m}
     </option>
   ))}
 
@@ -368,26 +404,49 @@ const actualizarStock = async (
 </button>
 
 <button
-  onClick={() => {
+  onClick={async () => {
 
-    const nuevoNombre =
-      prompt(
-        "Nuevo nombre",
-        p.nombre
-      );
+  const nuevoNombre = prompt(
+    "Nuevo nombre",
+    p.nombre
+  );
 
-    if (!nuevoNombre) return;
+  if (nuevoNombre === null) return;
 
-    updateDoc(
-      doc(db, "stock", p.id!),
-      {
-        nombre: nuevoNombre,
-      }
-    );
+  const nuevaCategoria = prompt(
+    "Nueva categoría",
+    p.categoria || "Otros"
+  );
 
-    cargarPiezas();
+  if (nuevaCategoria === null) return;
 
-  }}
+  const nuevaCompra = prompt(
+    "Nuevo precio compra",
+    String(p.compra)
+  );
+
+  if (nuevaCompra === null) return;
+
+  const nuevaVenta = prompt(
+    "Nuevo precio venta",
+    String(p.venta)
+  );
+
+  if (nuevaVenta === null) return;
+
+  await updateDoc(
+    doc(db, "stock", p.id!),
+    {
+      nombre: nuevoNombre,
+      categoria: nuevaCategoria,
+      compra: Number(nuevaCompra),
+      venta: Number(nuevaVenta),
+    }
+  );
+
+  cargarPiezas();
+
+}}
   className="bg-blue-600 text-white px-3 py-1 rounded mt-2 ml-2"
 >
   ✏ Editar
