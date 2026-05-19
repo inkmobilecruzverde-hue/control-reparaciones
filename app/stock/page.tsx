@@ -217,12 +217,12 @@ const actualizarStock = async (
     </p>
   </div>
 
-</div>
-<div className="bg-white p-4 rounded shadow mb-6">
+ </div>
+<details className="bg-white p-4 rounded shadow mb-6">
 
-  <h2 className="text-xl font-bold mb-3">
-    📊 Inversión por categorías
-  </h2>
+  <summary className="text-xl font-bold mb-3 cursor-pointer select-none">
+  📊 Inversión por categorías
+</summary>
 
   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
 
@@ -246,8 +246,7 @@ const actualizarStock = async (
     ))}
 
   </div>
-
-</div>
+</details>
       <div className="bg-white p-4 rounded shadow space-y-2 mb-6">
 
         <input
