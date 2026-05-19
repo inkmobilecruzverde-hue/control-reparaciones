@@ -417,7 +417,7 @@ const actualizarStock = async (
     nombre: p.nombre,
     categoria: p.categoria,
     marca: p.marca,
-    stock: p.stock,
+    stock: p.stock || 0,
     compra: p.compra,
     venta: p.venta,
   });
@@ -508,12 +508,12 @@ const actualizarStock = async (
     await updateDoc(
       doc(db, "stock", p.id!),
       {
-        nombre: editForm.nombre,
-        categoria: editForm.categoria,
-        marca: editForm.marca,
-        compra: Number(editForm.compra),
-        venta: Number(editForm.venta),
-      }
+  nombre: editForm.nombre || "",
+  categoria: editForm.categoria || "Otros",
+  marca: editForm.marca || "Otros",
+  compra: Number(editForm.compra) || 0,
+  venta: Number(editForm.venta) || 0,
+}
     );
 
     setEditando(null);
