@@ -63,6 +63,17 @@ export default function StockPage() {
   useState("Todos");
 const [editando, setEditando] =
   useState<string | null>(null);
+  const valorTotal = piezas.reduce(
+  (total, p) =>
+    total + (p.stock * p.compra),
+  0
+);
+
+const totalArticulos = piezas.length;
+
+const sinStock = piezas.filter(
+  (p) => p.stock <= 0
+).length;
 
 const [editForm, setEditForm] =
   useState<any>({});
@@ -159,7 +170,39 @@ const actualizarStock = async (
       <h1 className="text-3xl font-bold mb-4">
         📦 Stock / Recambios
       </h1>
+<div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
 
+  <div className="bg-green-100 p-4 rounded shadow">
+    <p className="text-sm text-gray-600">
+      💰 Valor total stock
+    </p>
+
+    <p className="text-2xl font-bold">
+      {valorTotal.toFixed(2)} €
+    </p>
+  </div>
+
+  <div className="bg-blue-100 p-4 rounded shadow">
+    <p className="text-sm text-gray-600">
+      📦 Total artículos
+    </p>
+
+    <p className="text-2xl font-bold">
+      {totalArticulos}
+    </p>
+  </div>
+
+  <div className="bg-red-100 p-4 rounded shadow">
+    <p className="text-sm text-gray-600">
+      ⚠️ Sin stock
+    </p>
+
+    <p className="text-2xl font-bold">
+      {sinStock}
+    </p>
+  </div>
+
+</div>
       <div className="bg-white p-4 rounded shadow space-y-2 mb-6">
 
         <input
