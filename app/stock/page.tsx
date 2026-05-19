@@ -74,7 +74,22 @@ const totalArticulos = piezas.length;
 const sinStock = piezas.filter(
   (p) => p.stock <= 0
 ).length;
+const inversionCategorias = categorias.map((cat) => {
 
+  const total = piezas
+    .filter((p) => p.categoria === cat)
+    .reduce(
+      (sum, p) =>
+        sum + (p.stock * p.compra),
+      0
+    );
+
+  return {
+    categoria: cat,
+    total,
+  };
+
+});
 const [editForm, setEditForm] =
   useState<any>({});
 const [filtroCategoria, setFiltroCategoria] =
@@ -200,6 +215,36 @@ const actualizarStock = async (
     <p className="text-2xl font-bold">
       {sinStock}
     </p>
+  </div>
+
+</div>
+<div className="bg-white p-4 rounded shadow mb-6">
+
+  <h2 className="text-xl font-bold mb-3">
+    📊 Inversión por categorías
+  </h2>
+
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+
+    {inversionCategorias.map((c) => (
+
+      <div
+        key={c.categoria}
+        className="bg-gray-100 p-3 rounded"
+      >
+
+        <p className="text-sm text-gray-600">
+          {c.categoria}
+        </p>
+
+        <p className="font-bold text-lg">
+          {c.total.toFixed(2)} €
+        </p>
+
+      </div>
+
+    ))}
+
   </div>
 
 </div>
