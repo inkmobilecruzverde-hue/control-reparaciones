@@ -563,7 +563,7 @@ const actualizarStock = async (
 )}
 
 
-              <div className="flex items-center gap-2 mt-2">
+              <div className="flex items-start gap-2 mt-2">
 
   <button
     onClick={() =>
@@ -578,9 +578,36 @@ const actualizarStock = async (
     -
   </button>
 
+  <div>
+
   <span>
     Stock: {p.stock}
   </span>
+
+  <p className="text-xs text-gray-500 mt-1">
+    Última compra:{" "}
+    {p.ultimaCompra
+      ? new Date(
+          p.ultimaCompra
+        ).toLocaleDateString()
+      : "-"}
+  </p>
+
+  <p className="text-xs text-gray-500">
+    Última salida:{" "}
+    {p.ultimaSalida
+      ? new Date(
+          p.ultimaSalida
+        ).toLocaleDateString()
+      : "-"}
+  </p>
+
+  <p className="text-xs text-gray-500">
+    Última orden:{" "}
+    {p.ultimaOrden || "-"}
+  </p>
+
+</div>
   <p className="text-xs text-gray-500 mt-1">
   Última compra:{" "}
   {p.ultimaCompra
