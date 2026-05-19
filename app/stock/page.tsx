@@ -503,22 +503,34 @@ const actualizarStock = async (
     <button
       onClick={async () => {
 
-        await updateDoc(
-          doc(db, "stock", p.id!),
-          {
-            nombre: editForm.nombre,
-            categoria: editForm.categoria,
-            marca: editForm.marca,
-            compra: Number(editForm.compra),
-            venta: Number(editForm.venta),
-          }
-        );
+  try {
 
-        setEditando(null);
+    await updateDoc(
+      doc(db, "stock", p.id!),
+      {
+        nombre: editForm.nombre,
+        categoria: editForm.categoria,
+        marca: editForm.marca,
+        compra: Number(editForm.compra),
+        venta: Number(editForm.venta),
+      }
+    );
 
-        cargarPiezas();
+    setEditando(null);
 
-      }}
+    cargarPiezas();
+
+    alert("Artículo actualizado");
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Error al guardar");
+
+  }
+
+}}
       className="bg-green-600 text-white px-3 py-2 rounded"
     >
       💾 Guardar cambios
