@@ -20,6 +20,9 @@ type Pieza = {
   stock: number;
   compra: number;
   venta: number;
+  ultimaCompra?: string;
+ultimaSalida?: string;
+ultimaOrden?: string;
 };
 
 export default function StockPage() {
@@ -143,6 +146,8 @@ const [filtroCategoria, setFiltroCategoria] =
     stock: Number(form.stock),
     compra: Number(form.compra),
     venta: Number(form.venta),
+    ultimaCompra:
+  new Date().toISOString(),
   }
 );
 
@@ -168,13 +173,24 @@ const actualizarStock = async (
   id: string,
   campo: string,
   valor: number
+  
 ) => {
 
   await updateDoc(
     doc(db, "stock", id),
     {
-      [campo]: valor,
-    }
+  [campo]: valor,
+
+  ...(valor > 0 && {
+    ultimaCompra:
+      new Date().toISOString(),
+  }),
+
+  ...(valor < 0 && {
+    ultimaSalida:
+      new Date().toISOString(),
+  }),
+}
   );
 
   cargarPiezas();
@@ -565,6 +581,28 @@ const actualizarStock = async (
   <span>
     Stock: {p.stock}
   </span>
+  <p className="text-xs text-gray-500 mt-1">
+  Última compra:{" "}
+  {p.ultimaCompra
+    ? new Date(
+        p.ultimaCompra
+      ).toLocaleDateString()
+    : "-"}
+</p>
+
+<p className="text-xs text-gray-500">
+  Última salida:{" "}
+  {p.ultimaSalida
+    ? new Date(
+        p.ultimaSalida
+      ).toLocaleDateString()
+    : "-"}
+</p>
+
+<p className="text-xs text-gray-500">
+  Última orden:{" "}
+  {p.ultimaOrden || "-"}
+</p>
 
   <button
     onClick={() =>
