@@ -236,59 +236,65 @@ const actualizarStock = async (
 >
   📥 Exportar stock CSV
 </button>
-<input
-  type="file"
-  accept=".csv"
-  className="mb-4 ml-2"
-  onChange={async (e) => {
+<label className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer ml-2 inline-block">
 
-    const file =
-      e.target.files?.[0];
+  📤 Importar CSV
 
-    if (!file) return;
+  <input
+    type="file"
+    accept=".csv"
+    hidden
+    onChange={async (e) => {
 
-    const text =
-      await file.text();
+      const file =
+        e.target.files?.[0];
 
-    const rows =
-      text.split("\n");
+      if (!file) return;
 
-    const datos =
-      rows.slice(1);
+      const text =
+        await file.text();
 
-    for (const row of datos) {
+      const rows =
+        text.split("\n");
 
-      if (!row.trim()) continue;
+      const datos =
+        rows.slice(1);
 
-      const [
-        nombre,
-        marca,
-        categoria,
-        stock,
-        compra,
-        venta,
-      ] = row.split(",");
+      for (const row of datos) {
 
-      await addDoc(
-        collection(db, "stock"),
-        {
+        if (!row.trim()) continue;
+
+        const [
           nombre,
           marca,
           categoria,
-          stock: Number(stock),
-          compra: Number(compra),
-          venta: Number(venta),
-        }
-      );
+          stock,
+          compra,
+          venta,
+        ] = row.split(",");
 
-    }
+        await addDoc(
+          collection(db, "stock"),
+          {
+            nombre,
+            marca,
+            categoria,
+            stock: Number(stock),
+            compra: Number(compra),
+            venta: Number(venta),
+          }
+        );
 
-    cargarPiezas();
+      }
 
-    alert("Stock importado");
+      cargarPiezas();
 
-  }}
-/>
+      alert("✅ Stock importado");
+
+    }}
+  />
+
+</label>
 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
 
   <div className="bg-green-100 p-4 rounded shadow">
