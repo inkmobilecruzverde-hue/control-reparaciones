@@ -57,10 +57,15 @@ export default function StockPage() {
 ];
   const [piezas, setPiezas] =
   
+  
     useState<Pieza[]>([]);
     const [filtroStock, setFiltroStock] =
   useState("Todos");
+const [editando, setEditando] =
+  useState<string | null>(null);
 
+const [editForm, setEditForm] =
+  useState<any>({});
 const [filtroCategoria, setFiltroCategoria] =
   useState("Todas");
   const [busqueda, setBusqueda] =
@@ -404,53 +409,124 @@ const actualizarStock = async (
 </button>
 
 <button
-  onClick={async () => {
+  onClick={() => {
 
-  const nuevoNombre = prompt(
-    "Nuevo nombre",
-    p.nombre
-  );
+  setEditando(p.id!);
 
-  if (nuevoNombre === null) return;
-
-  const nuevaCategoria = prompt(
-    "Nueva categoría",
-    p.categoria || "Otros"
-  );
-
-  if (nuevaCategoria === null) return;
-
-  const nuevaCompra = prompt(
-    "Nuevo precio compra",
-    String(p.compra)
-  );
-
-  if (nuevaCompra === null) return;
-
-  const nuevaVenta = prompt(
-    "Nuevo precio venta",
-    String(p.venta)
-  );
-
-  if (nuevaVenta === null) return;
-
-  await updateDoc(
-    doc(db, "stock", p.id!),
-    {
-      nombre: nuevoNombre,
-      categoria: nuevaCategoria,
-      compra: Number(nuevaCompra),
-      venta: Number(nuevaVenta),
-    }
-  );
-
-  cargarPiezas();
+  setEditForm({
+    nombre: p.nombre,
+    categoria: p.categoria,
+    marca: p.marca,
+    stock: p.stock,
+    compra: p.compra,
+    venta: p.venta,
+  });
 
 }}
   className="bg-blue-600 text-white px-3 py-1 rounded mt-2 ml-2"
 >
   ✏ Editar
 </button>
+{editando === p.id && (
+
+  <div className="mt-4 space-y-2">
+
+    <input
+      className="border p-2 w-full"
+      value={editForm.nombre}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          nombre: e.target.value,
+        })
+      }
+    />
+
+    <select
+      className="border p-2 w-full"
+      value={editForm.categoria}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          categoria: e.target.value,
+        })
+      }
+    >
+      {categorias.map((cat) => (
+        <option key={cat}>
+          {cat}
+        </option>
+      ))}
+    </select>
+
+    <select
+      className="border p-2 w-full"
+      value={editForm.marca}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          marca: e.target.value,
+        })
+      }
+    >
+      {marcas.map((m) => (
+        <option key={m}>
+          {m}
+        </option>
+      ))}
+    </select>
+
+    <input
+      type="number"
+      className="border p-2 w-full"
+      value={editForm.compra}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          compra: e.target.value,
+        })
+      }
+    />
+
+    <input
+      type="number"
+      className="border p-2 w-full"
+      value={editForm.venta}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          venta: e.target.value,
+        })
+      }
+    />
+
+    <button
+      onClick={async () => {
+
+        await updateDoc(
+          doc(db, "stock", p.id!),
+          {
+            nombre: editForm.nombre,
+            categoria: editForm.categoria,
+            marca: editForm.marca,
+            compra: Number(editForm.compra),
+            venta: Number(editForm.venta),
+          }
+        );
+
+        setEditando(null);
+
+        cargarPiezas();
+
+      }}
+      className="bg-green-600 text-white px-3 py-2 rounded"
+    >
+      💾 Guardar cambios
+    </button>
+
+  </div>
+
+)}
             </div>
 
           </div>
