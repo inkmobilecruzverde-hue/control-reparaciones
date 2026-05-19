@@ -15,12 +15,31 @@ updateDoc,
 type Pieza = {
   id?: string;
   nombre: string;
+  categoria: string;
   stock: number;
   compra: number;
   venta: number;
 };
 
 export default function StockPage() {
+  const categorias = [
+  "Pantallas",
+  "Baterías",
+  "Tapas Traseras",
+  "Flex de Carga",
+  "PCB Carga",
+  "Flex Botoneras",
+  "Cámaras",
+  "Lentes Cámara",
+  "Flex Unión Placa",
+  "Auriculares",
+  "Altavoces",
+  "Micrófonos",
+  "SIM",
+  "Face ID",
+  "Huella",
+  "Otros",
+];
 
   const [piezas, setPiezas] =
     useState<Pieza[]>([]);
@@ -28,11 +47,13 @@ export default function StockPage() {
   useState("");
   const [form, setForm] = useState<{
   nombre: string;
+  categoria: string;
   stock: string;
   compra: string;
   venta: string;
 }>({
   nombre: "",
+  categoria: "Pantallas",
   stock: "",
   compra: "",
   venta: "",
@@ -64,6 +85,7 @@ export default function StockPage() {
   collection(db, "stock"),
   {
     nombre: form.nombre,
+    categoria: form.categoria,
     stock: Number(form.stock),
     compra: Number(form.compra),
     venta: Number(form.venta),
@@ -72,6 +94,7 @@ export default function StockPage() {
 
     setForm({
       nombre: "",
+      categoria: "Pantallas",
       stock: "",
       compra: "",
       venta: "",
@@ -121,7 +144,24 @@ const actualizarStock = async (
             })
           }
         />
+        <select
+  className="border p-2 w-full"
+  value={form.categoria}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      categoria: e.target.value,
+    })
+  }
+>
 
+  {categorias.map((c) => (
+    <option key={c}>
+      {c}
+    </option>
+  ))}
+
+</select>
         <input
           type="number"
           className="border p-2 w-full"
