@@ -1109,7 +1109,7 @@ return (
     justify-content: space-between;
 
     box-sizing: border-box;
-    zoom: 4;
+    zoom: 12;
     transform-origin: top left;
   "
 >
@@ -1129,13 +1129,13 @@ return (
     style="
       flex:1;
       text-align:left;
-      font-size:11px;
+      font-size:6px;
       line-height:1.2;
       overflow:hidden;
     "
   >
 
-    <div style="font-weight:bold;font-size:13px;">
+    <div style="font-weight:bold;font-size:8px;">
       🛠️ Ink-Mobile
     </div>
 
@@ -1187,8 +1187,8 @@ return (
 
     <img
       style="
-        width:16mm;
-        height:16mm;
+        width:10mm;
+        height:10mm;
       "
       src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://ink-mobile-app-kbu6.vercel.app/consulta?telefono=${etiquetaSeleccionada.telefono}&orden=${etiquetaSeleccionada.numero}"
     />
