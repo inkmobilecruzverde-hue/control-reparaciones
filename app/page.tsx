@@ -1109,6 +1109,8 @@ return (
     justify-content: space-between;
 
     box-sizing: border-box;
+    zoom: 4;
+    transform-origin: top left;
   "
 >
 
@@ -1185,8 +1187,8 @@ return (
 
     <img
       style="
-        width:22mm;
-        height:22mm;
+        width:16mm;
+        height:16mm;
       "
       src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://ink-mobile-app-kbu6.vercel.app/consulta?telefono=${etiquetaSeleccionada.telefono}&orden=${etiquetaSeleccionada.numero}"
     />
