@@ -1096,41 +1096,104 @@ return (
 }
 </style>
       <body
-        style="
-          font-family: Arial;
-          text-align:center;
-          padding:20px;
-        "
-      >
+  style="
+    font-family: Arial, sans-serif;
+    width: 50mm;
+    height: 30mm;
+    margin: 0;
+    padding: 2mm;
+    overflow: hidden;
 
-        <h2>🛠️ Ink-Mobile</h2>
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-        <p>
-          <b>Orden:</b><br/>
-          ${etiquetaSeleccionada.numero}
-        </p>
+    box-sizing: border-box;
+  "
+>
 
-        <p>
-          <b>Cliente:</b><br/>
-          ${etiquetaSeleccionada.nombre}
-        </p>
+       <div
+  style="
+    display:flex;
+    width:100%;
+    height:100%;
+    align-items:center;
+    justify-content:space-between;
+    gap:4mm;
+  "
+>
 
-        <p>
-          <b>Modelo:</b><br/>
-          ${etiquetaSeleccionada.modelo}
-        </p>
+  <div
+    style="
+      flex:1;
+      text-align:left;
+      font-size:11px;
+      line-height:1.2;
+      overflow:hidden;
+    "
+  >
 
-        <p>
-          <b>IMEI:</b><br/>
-          ${etiquetaSeleccionada.serie || "-"}
-        </p>
+    <div style="font-weight:bold;font-size:13px;">
+      🛠️ Ink-Mobile
+    </div>
 
-        <br/>
+    <div>
+      <b>Orden:</b>
+      ${etiquetaSeleccionada.numero}
+    </div>
 
-        <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ink-mobile-app-kbu6.vercel.app/consulta?telefono=${etiquetaSeleccionada.telefono}&orden=${etiquetaSeleccionada.numero}"
-        />
-<br/><br/>
+    <div
+      style="
+        font-size:10px;
+        margin-top:2px;
+        word-break:break-word;
+      "
+    >
+      ${etiquetaSeleccionada.nombre}
+    </div>
+
+    <div
+      style="
+        font-size:10px;
+        margin-top:2px;
+        word-break:break-word;
+      "
+    >
+      ${etiquetaSeleccionada.modelo}
+    </div>
+
+    <div
+      style="
+        font-size:9px;
+        margin-top:2px;
+      "
+    >
+      IMEI:
+      ${etiquetaSeleccionada.serie || "-"}
+    </div>
+
+  </div>
+
+  <div
+    style="
+      width:24mm;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    "
+  >
+
+    <img
+      style="
+        width:22mm;
+        height:22mm;
+      "
+      src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://ink-mobile-app-kbu6.vercel.app/consulta?telefono=${etiquetaSeleccionada.telefono}&orden=${etiquetaSeleccionada.numero}"
+    />
+
+  </div>
+
+</div>
 
 <button
   onclick="window.location.href='/'"
@@ -1152,6 +1215,9 @@ return (
 if (button) {
   button.style.display = "none";
 }
+
+document.body.style.width = "50mm";
+document.body.style.height = "30mm";
 
 window.print();
 
