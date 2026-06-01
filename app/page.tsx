@@ -364,12 +364,36 @@ for (const nombrePieza of nuevasPiezas) {
   ) {
 
     await updateDoc(
-      doc(db, "stock", piezaStock.id),
+  doc(db, "stock", piezaStock.id),
+  {
+    stock:
+      piezaStock.stock - 1,
+
+    ultimaSalida:
+      new Date().toISOString(),
+
+    ultimaOrden:
+      ordenSeleccionada.numero,
+
+    historial: [
+      ...(piezaStock.historial || []),
+
       {
-        stock:
-          piezaStock.stock - 1,
-      }
-    );
+        orden:
+          ordenSeleccionada.numero || "-",
+
+        cliente:
+          ordenSeleccionada.nombre || "-",
+
+        modelo:
+          ordenSeleccionada.modelo || "-",
+
+        fecha:
+          new Date().toISOString(),
+      },
+    ],
+  }
+);
 
   }
 

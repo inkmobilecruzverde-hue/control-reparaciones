@@ -23,6 +23,12 @@ type Pieza = {
   ultimaCompra?: string;
 ultimaSalida?: string;
 ultimaOrden?: string;
+historial?: {
+  orden: string;
+  cliente: string;
+  modelo: string;
+  fecha: string;
+}[];
 };
 
 export default function StockPage() {
@@ -606,6 +612,59 @@ const actualizarStock = async (
     Última orden:{" "}
     {p.ultimaOrden || "-"}
   </p>
+  <details className="mt-2">
+
+  <summary className="cursor-pointer text-blue-600 text-sm">
+    📋 Ver historial
+  </summary>
+
+  <div className="mt-2 space-y-2">
+
+    {p.historial?.length ? (
+
+      p.historial
+        .slice()
+        .reverse()
+        .map((h, i) => (
+
+          <div
+            key={i}
+            className="bg-gray-100 p-2 rounded text-xs"
+          >
+
+            <p>
+              <b>Orden:</b> {h.orden}
+            </p>
+
+            <p>
+              <b>Cliente:</b> {h.cliente}
+            </p>
+
+            <p>
+              <b>Modelo:</b> {h.modelo}
+            </p>
+
+            <p>
+              <b>Fecha:</b>{" "}
+              {new Date(h.fecha)
+                .toLocaleDateString()}
+            </p>
+
+          </div>
+
+        ))
+
+    ) : (
+
+      <p className="text-xs text-gray-500">
+        Sin historial
+      </p>
+
+    )}
+
+  </div>
+
+</details>
 
 </div>
   
