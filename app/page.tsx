@@ -28,6 +28,7 @@ problema: string;
 codigo?: string;
 notas?: string;
 presupuesto?: string;
+pagado?: boolean;
 coste?: string;
 estado: string;
 fecha?: any;
@@ -164,6 +165,7 @@ if (!form.nombre || !form.telefono) return;
 
 await addDoc(collection(db, "ordenes"), {
   ...form,
+  pagado: false,
   numero: generarNumero(),
   fecha: new Date().toISOString(),
 });
@@ -562,6 +564,7 @@ EL SERVICIO TIENE UN COSTE DE 1€ DIARIO A CONTAR PASADOS 30 DÍAS DE LA FECHA 
 setTimeout(() => {
   window.close();
 }, 1000);
+};
 </script>
     </body>
   </html>
@@ -787,6 +790,14 @@ return (
 />
     <input className="border p-2 w-full" placeholder="Modelo" value={form.modelo} onChange={(e) => setForm({ ...form, modelo: e.target.value })} />
     <input className="border p-2 w-full" placeholder="Problema" value={form.problema} onChange={(e) => setForm({ ...form, problema: e.target.value })} />
+    <input
+  className="border p-2 w-full"
+  placeholder="Código"
+  value={form.codigo}
+  onChange={(e) =>
+    setForm({ ...form, codigo: e.target.value })
+  }
+/>
  <div className="flex gap-2">
 
   <input
@@ -828,19 +839,7 @@ return (
     })
   }
 />
-<input
-  type="number"
-  inputMode="decimal"
-  className="border p-2 w-full"
-  placeholder="Coste pieza (€)"
-  value={form.coste || ""}
-  onChange={(e) =>
-    setForm({
-      ...form,
-      coste: e.target.value,
-    })
-  }
-/>
+
     <select className="border p-2 w-full" value={form.estado} onChange={(e) => setForm({ ...form, estado: e.target.value })}>
       {estados.map(e => <option key={e}>{e}</option>)}
     </select>
@@ -863,10 +862,11 @@ return (
     <thead>
       <tr>
         <th>Cliente</th>
-        <th>Modelo</th>
-        <th>Presupuesto</th>
-        <th>Estado</th>
-        <th></th>
+<th>Modelo</th>
+<th>Etiqueta</th>
+<th>Presupuesto</th>
+<th>Estado</th>
+<th></th>
       </tr>
     </thead>
 
@@ -1052,11 +1052,6 @@ return (
       </h2>
 
       <p className="mt-2">
-        <b>Orden:</b><br />
-        {etiquetaSeleccionada.numero}
-      </p>
-
-      <p className="mt-2">
         <b>Cliente:</b><br />
         {etiquetaSeleccionada.nombre}
       </p>
@@ -1065,6 +1060,16 @@ return (
         <b>Modelo:</b><br />
         {etiquetaSeleccionada.modelo}
       </p>
+
+      <p>
+  <b>Problema:</b><br/>
+  ${etiquetaSeleccionada.problema || "-"}
+</p>
+
+<p>
+  <b>Presupuesto:</b><br/>
+  ${etiquetaSeleccionada.presupuesto || "-"} €
+</p>
 
       <p className="mt-2 text-xs">
         IMEI:
@@ -1082,164 +1087,108 @@ return (
       <button
         onClick={() => {
 
-  const ventana = window.open("", "_blank");
+  const canvas = document.createElement("canvas");
+
+canvas.width = 600;
+canvas.height = 360;
+
+const ctx = canvas.getContext("2d");
+
+if (!ctx) return;
+
+ctx.fillStyle = "white";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+ctx.fillStyle = "black";
+
+ctx.font = "bold 22px Arial";
+ctx.fillText("Cliente:", 40, 60);
+
+ctx.font = "20px Arial";
+ctx.fillText(etiquetaSeleccionada.nombre, 40, 90);
+
+ctx.font = "bold 22px Arial";
+ctx.fillText("Modelo:", 40, 130);
+
+ctx.font = "20px Arial";
+ctx.fillText(etiquetaSeleccionada.modelo, 40, 160);
+
+ctx.font = "bold 22px Arial";
+ctx.fillText("Problema:", 40, 200);
+
+ctx.font = "20px Arial";
+ctx.fillText(etiquetaSeleccionada.problema || "-", 40, 230);
+
+ctx.font = "bold 22px Arial";
+ctx.fillText("Presupuesto:", 40, 270);
+
+ctx.font = "20px Arial";
+ctx.fillText(
+  `${etiquetaSeleccionada.presupuesto || "-"} €`,
+  40,
+  300
+);
+
+ctx.font = "bold 22px Arial";
+ctx.fillText(
+  `IMEI: ${etiquetaSeleccionada.serie || "-"}`,
+  40,
+  340
+);
+
+const qr = new Image();
+
+qr.crossOrigin = "anonymous";
+
+qr.src =
+  `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://ink-mobile-app-kbu6.vercel.app/consulta?telefono=${etiquetaSeleccionada.telefono}&orden=${etiquetaSeleccionada.numero}`;
+
+qr.onload = () => {
+
+  ctx.drawImage(qr, 390, 70, 180, 180);
+
+  const dataUrl = canvas.toDataURL("image/png");
+
+  const ventana = window.open("", "_self");
 
   if (!ventana) return;
 
   ventana.document.write(`
     <html>
-    <style>
-@media print {
-  button {
-    display: none !important;
-  }
-}
-</style>
-      <body
-  style="
-    font-family: Arial, sans-serif;
-    width: 50mm;
-    height: 30mm;
-    margin: 0;
-    padding: 2mm;
-    overflow: hidden;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    box-sizing: border-box;
-    zoom: 12;
-    transform-origin: top left;
-  "
->
-
-       <div
-  style="
-    display:flex;
-    width:100%;
-    height:100%;
-    align-items:center;
-    justify-content:space-between;
-    gap:4mm;
-  "
->
-
-  <div
-    style="
-      flex:1;
-      text-align:left;
-      font-size:6px;
-      line-height:1.2;
-      overflow:hidden;
-    "
-  >
-
-    <div style="font-weight:bold;font-size:8px;">
-      🛠️ Ink-Mobile
-    </div>
-
-    <div>
-      <b>Orden:</b>
-      ${etiquetaSeleccionada.numero}
-    </div>
-
-    <div
-      style="
-        font-size:10px;
-        margin-top:2px;
-        word-break:break-word;
-      "
-    >
-      ${etiquetaSeleccionada.nombre}
-    </div>
-
-    <div
-      style="
-        font-size:10px;
-        margin-top:2px;
-        word-break:break-word;
-      "
-    >
-      ${etiquetaSeleccionada.modelo}
-    </div>
-
-    <div
-      style="
-        font-size:9px;
-        margin-top:2px;
-      "
-    >
-      IMEI:
-      ${etiquetaSeleccionada.serie || "-"}
-    </div>
-
-  </div>
-
-  <div
-    style="
-      width:24mm;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-    "
-  >
-
-    <img
-      style="
-        width:10mm;
-        height:10mm;
-      "
-      src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://ink-mobile-app-kbu6.vercel.app/consulta?telefono=${etiquetaSeleccionada.telefono}&orden=${etiquetaSeleccionada.numero}"
-    />
-
-  </div>
-
-</div>
+      <body style="margin:0;background:white;text-align:center;">
+        <img src="${dataUrl}" style="width:58mm;height:30mm;" />
+        <br/><br/>
 
 <button
   onclick="window.location.href='/'"
   style="
     padding:12px 20px;
-    font-size:18px;
-    border:none;
-    border-radius:10px;
     background:black;
     color:white;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
   "
 >
   ⬅ Volver
 </button>
         <script>
           window.onload = () => {
-            const button = document.getElementById("volverBtn");
-
-if (button) {
-  button.style.display = "none";
-}
-
-document.body.style.width = "50mm";
-document.body.style.height = "30mm";
-
-window.print();
-
-if (button) {
-  button.style.display = "block";
-}
+            window.print();
           };
         </script>
-
       </body>
     </html>
   `);
 
   ventana.document.close();
+};
 
 }}
-        className="bg-black text-white px-4 py-2 rounded"
-      >
-        🖨️ Imprimir
-      </button>
+className="bg-black text-white px-4 py-2 rounded"
+>
+  🖨️ Imprimir
+</button>
 
     </div>
   </div>
@@ -1301,16 +1250,159 @@ if (button) {
   </div>
 )}
 
-        <input className="border p-2 w-full" value={ordenSeleccionada.nombre} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, nombre: e.target.value })} />
-        <input className="border p-2 w-full" value={ordenSeleccionada.telefono} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, telefono: e.target.value })} />
-        <input className="border p-2 w-full" value={ordenSeleccionada.dni || ""} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, dni: e.target.value })} />
-        <input className="border p-2 w-full" value={ordenSeleccionada.modelo} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, modelo: e.target.value })} />
-        <input className="border p-2 w-full"value={ordenSeleccionada.serie || ""}onChange={(e) =>setOrdenSeleccionada({...ordenSeleccionada,serie: e.target.value,})}/>
-        <input className="border p-2 w-full" value={ordenSeleccionada.problema} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, problema: e.target.value })} />
-        <input className="border p-2 w-full" value={ordenSeleccionada.codigo || ""} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, codigo: e.target.value })} />
-        <input className="border p-2 w-full" value={ordenSeleccionada.presupuesto || ""} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, presupuesto: e.target.value })} />
-        <input className="border p-2 w-full" value={ordenSeleccionada.notas || ""} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, notas: e.target.value })} />
-        <select className="border p-2 w-full" value={ordenSeleccionada.estado} onChange={(e) => setOrdenSeleccionada({ ...ordenSeleccionada, estado: e.target.value })}>
+        <input
+  className="border p-2 w-full"
+  placeholder="Nombre"
+  value={ordenSeleccionada.nombre}
+  onChange={(e) =>
+    setOrdenSeleccionada({
+      ...ordenSeleccionada,
+      nombre: e.target.value
+    })
+  }
+/>
+
+<input
+  className="border p-2 w-full"
+  placeholder="Teléfono"
+  value={ordenSeleccionada.telefono}
+  onChange={(e) =>
+    setOrdenSeleccionada({
+      ...ordenSeleccionada,
+      telefono: e.target.value
+    })
+  }
+/>
+
+<input
+  className="border p-2 w-full"
+  placeholder="DNI"
+  value={ordenSeleccionada.dni || ""}
+  onChange={(e) =>
+    setOrdenSeleccionada({
+      ...ordenSeleccionada,
+      dni: e.target.value
+    })
+  }
+/>
+
+<input
+  className="border p-2 w-full"
+  placeholder="Modelo"
+  value={ordenSeleccionada.modelo}
+  onChange={(e) =>
+    setOrdenSeleccionada({
+      ...ordenSeleccionada,
+      modelo: e.target.value
+    })
+  }
+/>
+
+<input
+  className="border p-2 w-full"
+  placeholder="Nº Serie / IMEI"
+  value={ordenSeleccionada.serie || ""}
+  onChange={(e) =>
+    setOrdenSeleccionada({
+      ...ordenSeleccionada,
+      serie: e.target.value,
+    })
+  }
+/>
+
+<input
+  className="border p-2 w-full"
+  placeholder="Problema"
+  value={ordenSeleccionada.problema}
+  onChange={(e) =>
+    setOrdenSeleccionada({
+      ...ordenSeleccionada,
+      problema: e.target.value
+    })
+  }
+/>
+
+<input
+  className="border p-2 w-full"
+  placeholder="Código"
+  value={ordenSeleccionada.codigo || ""}
+  onChange={(e) =>
+    setOrdenSeleccionada({
+      ...ordenSeleccionada,
+      codigo: e.target.value,
+    })
+  }
+/>
+
+<div className="flex items-center gap-2">
+
+  <input
+    className="border p-2 flex-1"
+    placeholder="Presupuesto (€)"
+    value={ordenSeleccionada.presupuesto || ""}
+    onChange={(e) =>
+      setOrdenSeleccionada({
+        ...ordenSeleccionada,
+        presupuesto: e.target.value
+      })
+    }
+  />
+<label className="flex items-center gap-2 mt-2 text-lg">
+  <input
+    type="checkbox"
+    className="w-5 h-5 accent-green-600"
+    checked={ordenSeleccionada.pagado || false}
+    onChange={(e) =>
+      setOrdenSeleccionada({
+        ...ordenSeleccionada,
+        pagado: e.target.checked,
+      })
+    }
+  />
+  💶 Pagado
+</label>
+  <button
+    type="button"
+    onClick={() =>
+      setOrdenSeleccionada({
+        ...ordenSeleccionada,
+        pagado: !(ordenSeleccionada as any).pagado
+      })
+    }
+    className={`w-11 h-11 rounded-full border-2 flex items-center justify-center font-bold transition ${
+      (ordenSeleccionada as any).pagado
+        ? "bg-green-500 border-green-500 text-white"
+        : "bg-white border-gray-400 text-gray-400"
+    }`}
+  >
+    €
+  </button>
+
+</div>
+  
+
+<input
+  className="border p-2 w-full"
+  placeholder="Notas"
+  value={ordenSeleccionada.notas || ""}
+  onChange={(e) =>
+    setOrdenSeleccionada({
+      ...ordenSeleccionada,
+      notas: e.target.value
+    })
+  }
+/>
+
+<select
+  className="border p-2 w-full"
+  value={ordenSeleccionada.estado}
+  onChange={(e) =>
+    setOrdenSeleccionada({
+      ...ordenSeleccionada,
+      estado: e.target.value
+    })
+  }
+>
           {estados.map(e => <option key={e}>{e}</option>)}
         </select>
     <select
